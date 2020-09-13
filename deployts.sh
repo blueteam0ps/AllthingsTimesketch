@@ -25,6 +25,8 @@ apt-get update
 
 apt-get install elasticsearch postgresql python3-pip python3-dev libffi-dev python3-psycopg2 plaso-tools nginx -y
 pip3 install redis
+#Upgrading Redis post install to fix an issue with running l2t
+pip3 install redis --upgrade 
 
 /bin/systemctl daemon-reload
 /bin/systemctl enable elasticsearch.service
