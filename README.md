@@ -1,7 +1,7 @@
 # AllthingsTimeSketch
 
 <h1>Purpose</h1>
-This repository was created to provide helper/timesaver scripts/queries related to Timesketch and Plaso.
+This repository contains helper/timesaver scripts/queries related to Timesketch and Plaso.
 
 <h2>Timesketch and Plaso Auto Install & Configuration Script</h2>
 This script will automatically install Timesketch (version available via pip) and Plaso (apt repo). Nginx proxy will be installed
