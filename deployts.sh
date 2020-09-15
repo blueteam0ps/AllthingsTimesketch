@@ -54,7 +54,8 @@ sed -i "s|<USERNAME>|timesketch|g" /etc/timesketch/timesketch.conf
 sed -i "s|<PASSWORD>|${DBUSR_PASS}|g" /etc/timesketch/timesketch.conf
 
 #Adding Timesketch to autostart when OS boots
-echo "nohup tsctl runserver -h localhost -p 5000 2>&1 &" > /etc/init.d/tsstart
+printf "#!/bin/bash \n" > /etc/init.d/tsstart
+printf "nohup tsctl runserver -h localhost -p 5000 2>&1 &" >> /etc/init.d/tsstart
 chmod 755 /etc/init.d/tsstart
 ln -s /etc/init.d/tsstart /etc/rc3.d/S99tsstart
 
