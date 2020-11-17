@@ -11,3 +11,6 @@ This script has only been tested on Ubuntu 18.04 LTS.
 git clone the repo
 chmod a+x deployts.sh
 That is it. :)
+
+<b>Pre-built Queries</b>
+I have created a list of TS queries which you may come in handy during investigations. Refer to Queries.txt and pls feel free to contribute.
