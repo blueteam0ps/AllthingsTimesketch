@@ -1,0 +1,53 @@
+Windows User SID to User matching
+parser:"winreg/winreg_default" AND key_path:*ProfileList*
+
+T1021.001 - RDP Activity
+(event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40) AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager"
+
+T1562.004 - Windows Firewall Rules - (EID 2005 new rule added)
+(parser:"winreg/winreg_default" AND key_path:"HKEY_LOCAL_MACHINE\\System\\ControlSet001\\Services\\SharedAccess\\Parameters\\FirewallPolicy\\FirewallRules") OR (source_name:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier:2005)
+
+Windows Defender Related Events of Interest 
+source_name:"Defender" AND (event_identifier:5001 OR event_identifier:1006 OR event_identifier:1002 OR event_identifier:1003 OR event_identifier:1007 OR event_identifier:1008 OR event_identifier:1011 OR event_identifier:1012 OR event_identifier:1013 OR event_identifier:1014 OR event_identifier:1015 OR event_identifier:1116 OR event_identifier:1117 OR event_identifier:1118 OR event_identifier:1119 OR event_identifier:5010 OR event_identifier:5012)
+
+T1543.003 or T1569.002- Installation or Execution of a Windows Service
+event_identifier:7045 OR event_identifier:4697 OR event_identifier:6005
+
+T1562.001 Disable of AV
+source_name:"Defender" AND (event_identifier:5001 OR event_identifier:5007 OR event_identifier:5010 OR event_identifier:5012
+
+T1003.001 - Credential Dumping
+message:"*Invoke-Mimikatz*" OR *gentilkiwi* OR message:"*Mimikatz*"
+
+T1053.005 - Scheduled Tasks
+data_type:task_scheduler* OR "*windows\\system32\\tasks*"
+
+T1548.002 - UAC Bypass
+parser:winreg AND key_path:"*\\Software\\Classes\\ms-settings\\Shell\\Open\\command*" AND message:*default*
+
+T1110 Windows Logon Failures
+event_identifier:4625 AND source_name:Microsoft-Windows-Security-Auditing
+
+T1197 BITS Jobs
+event_identifier:59 AND source_name:"Microsoft-Windows-Bits-Client" AND NOT strings:"*fs.microsoft.com*"
+
+T1176 Browser Extensions
+parser:winreg AND (key_path:"*\\Software\\Google\\Chrome\\Extensions*" OR key_path:"*Wow6432Node\\Google\\Chrome\\Extensions*" OR key_path:"*\\SOFTWARE\\Mozilla\\*\\extensions*")
+
+T1183  Image File Execution Options Injection
+parser:winreg AND key_path:"*SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options*" AND message:*Debugger*
+
+T1209 Time Providers
+parser:winreg AND key_path:"*W32Time\\TimeProviders*" AND message:*dll*
+
+UAC Status
+key_path:"*Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA" AND message:"*DisplayType: [REG_DWORD_LE] 0*"
+
+T1059.001 - Suspicious PowerShell Command Execution
+source_name:*powershell* AND message:(\/\.\*\\\-w\.\*h\.\*\/ \/\.\*\\\-NoP\.\*\/ \/\.\*\\\-noni\.\*\/ \/\.\*\\\-ec\.\*\/ \/\.\*\\\-en\.\*\/)
+
+T1003.006 - DC Sync Behaviour
+event_identifier:5136 AND message:*ntsecuritydescriptor* AND (message:*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2* OR message:*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2* OR message:*89e95b76-444d-4c62-991a-0facbeda640c*)
+
+T1059 - Detects potential psexec via powershell module
+event_identifier:7045 AND (strings:*comspec* OR strings:*powershell*)
