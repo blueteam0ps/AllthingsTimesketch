@@ -1,3 +1,5 @@
+Below is a list of TS queries which you can utilise when performing investigations. Feel free to contribute to this.
+
 Windows User SID to User matching
 parser:"winreg/winreg_default" AND key_path:*ProfileList*
 
