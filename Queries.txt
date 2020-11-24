@@ -53,3 +53,21 @@ event_identifier:5136 AND message:*ntsecuritydescriptor* AND (message:*1131f6aa-
 
 T1059 - Detects potential psexec via powershell module
 event_identifier:7045 AND (strings:*comspec* OR strings:*powershell*)
+
+Mimikatz
+“System.Reflection.AssemblyName”
+“System.Reflection.Emit.AssemblyBuilderAccess “
+“System.Runtime.InteropServices.MarshalAsAttribute”
+“TOKEN_PRIVILEGES”
+ “SE_PRIVILEGE_ENABLED“
+ 
+ Sus powershell
+ “GetDelegateForFunctionPointer”
+“System.Reflection.AssemblyName“
+“System.Reflection.Emit.AssemblyBuilderAccess“
+“System.Management.Automation.WindowsErrorReporting”
+“MiniDumpWriteDump”
+“TOKEN_IMPERSONATE”
+“TOKEN_DUPLICATE”
+“TOKEN_ADJUST_PRIVILEGES”
+“TOKEN_PRIVILEGES”
