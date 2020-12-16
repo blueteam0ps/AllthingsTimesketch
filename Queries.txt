@@ -4,7 +4,7 @@ Windows User SID to User matching
 parser:"winreg/winreg_default" AND key_path:*ProfileList*
 
 T1021.001 - RDP Activity
-(event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40) AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager"
+(source_name\:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier\:21 OR event_identifier\:22 OR event_identifier\:24 OR event_identifier\:25 OR event_identifier\:39 OR event_identifier\:40)) OR (source_name\:"Microsoft-Windows-Security-Auditing" AND event_identifier\:4624 AND xml_string:"*LogonType\">10*")
 
 T1562.004 - Windows Firewall Rules - (EID 2005 new rule added)
 (parser:"winreg/winreg_default" AND key_path:"HKEY_LOCAL_MACHINE\\System\\ControlSet001\\Services\\SharedAccess\\Parameters\\FirewallPolicy\\FirewallRules") OR (source_name:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier:2005)
@@ -13,10 +13,10 @@ Windows Defender Related Events of Interest
 source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:1006 OR event_identifier:1002 OR event_identifier:1003 OR event_identifier:1007 OR event_identifier:1008 OR event_identifier:1011 OR event_identifier:1012 OR event_identifier:1013 OR event_identifier:1014 OR event_identifier:1015 OR event_identifier:1116 OR event_identifier:1117 OR event_identifier:1118 OR event_identifier:1119 OR event_identifier:5010 OR event_identifier:5012)
 
 T1543.003 or T1569.002- Installation or Execution of a Windows Service
-event_identifier:7045 OR event_identifier:4697 OR event_identifier:6005
+(source_name:"Service Control Manager" OR source_name:"EventLog") AND (event_identifier:7045 OR event_identifier:4697 OR event_identifier:6005)
 
-T1562.001 Disable of AV
-source_name:"Defender" AND (event_identifier:5001 OR event_identifier:5007 OR event_identifier:5010 OR event_identifier:5012
+T1562.001 Win Defender Disabled
+source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:5007 OR event_identifier:5010 OR event_identifier:5012)
 
 T1003.001 - Credential Dumping
 message:"*Invoke-Mimikatz*" OR *gentilkiwi* OR message:"*Mimikatz*"
