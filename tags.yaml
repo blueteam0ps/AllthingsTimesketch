@@ -1,5 +1,6 @@
 # This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
-# Collated by J Marasinghe 
+# Sources provided for specific queries which were built
+# Created by Janantha Marasinghe 
 
 win_usrprofile_tagger:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
@@ -192,8 +193,6 @@ win_base64encoded_gzipPE_tagger:
   create_view: true
   view_name: 'T1059-Base64 Encoded Gzip'
 
-
-
 #source:http://az4n6.blogspot.com/2020/02/detecting-laterial-movment-with-winscp.html
 win_ssh_exfil_lm_tagger:
   query_string:  'parser\:winevtx AND source_name:*parser\:winevtx AND (event_identifier\:7045 AND xml_string\:"*LogonType\">5*" AND xml_string\:"TargetUserName\">sshd*" AND xml_string\:"TargetDomainName\">VIRTUAL*")'
@@ -236,3 +235,40 @@ win_autoruns_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1547.001-Windows Autorun'
+
+#source:https://gist.github.com/pe3zx/7c5e0080c3b0869ccba1f1dc2ea0c5e0
+
+win_defender_disabledreg_tagger:
+  query_string:  'parser:winreg AND key_path:"*Microsoft\\Windows Defender*" AND (values:"*DisableRealtimeMonitoring: \[REG_DWORD_LE\] 1*" OR values:"*DisableAntiSpyware: \[REG_DWORD_LE\] 1*" OR values:"*DisableAntiVirus: \[REG_DWORD_LE\] 1*" OR values:"*DisableBehaviorMonitoring: \[REG_DWORD_LE\] 1*" OR values:"*DisableIOAVProtection: \[REG_DWORD_LE\] 1*" OR values:"*DisableOnAccessProtection: \[REG_DWORD_LE\] 1*" OR values:"*DisableScanOnRealtimeEnable: \[REG_DWORD_LE\] 1*" OR values:"*DisableEnhancedNotifications: \[REG_DWORD_LE\] 1*" OR values:"*DisableBlockAtFirstSeen: \[REG_DWORD_LE\] 1*")'
+  tags: ['win-defender','Defense-Evasion','T1562.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Disabled Registry Key'
+
+win_defender_disabledreporting_tagger:
+  query_string:  'parser:winreg AND key_path:"*Microsoft\\Windows Defender*" AND (message:"*SpyNetReporting: \[REG_DWORD_LE\] 0*" OR message:"*SubmitSamplesConsent: \[REG_DWORD_LE\] 0*" OR message:"*MpEnablePus: \[REG_DWORD_LE\] 0*")'
+  tags: ['win-defender','Defense-Evasion','T1562.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Reporting Disabled'
+
+win_defender_disablelog_tagger:
+  query_string:  'parser:winreg AND (key_path:"*DefenderApiLogger*" OR key_path:"*DefenderAuditLogger*") AND values:"*Start: \[REG_DWORD_LE\] 0*"'
+  tags: ['win-defender','Defense-Evasion','T1562.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Logging Disabled'
+
+win_defender_disableservices_tagger:
+  query_string:  'parser:winreg AND (key_path:"*WdBoot*" OR key_path:"*WdFilter*" OR key_path:"*WdNisDrv*" OR key_path:"*WdNisSvc*" OR key_path:"*WinDefend*" OR key_path:"*SecurityHealthService*" ) AND values:"*Start*" AND values:"*\[REG_DWORD_LE\] 4*"'
+  tags: ['win-defender','Defense-Evasion','T1562.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Services Disabled'
+
+win_defender_disableps_tagger:
+  query_string:  'parser:winevtx AND message:"*Set-MpPreference*" AND (message:"*Disable*" OR message:"*Reporting*" OR message:"*SubmitSamplesConsent*" OR message:"*DefaultAction*")'
+  tags: ['win-defender','Defense-Evasion','T1562.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Disabled via PS'
