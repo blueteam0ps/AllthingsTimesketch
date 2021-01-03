@@ -1,7 +1,3 @@
-# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
-# Sources provided for specific queries which were built
-# Created by Janantha Marasinghe 
-
 win_usrprofile_tagger:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
   tags: ['win-user-profiles']
@@ -101,7 +97,7 @@ win_postexploit_framework_tagger:
   view_name: 'T1219-Post Exploitation Tool Detection'
 
 win_execution_indicator_tagger:
-  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR (parser:winreg AND key_path:"*Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\*") OR parser:"prefetch" OR parser:"appcompatcache" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR parser:bam'
+  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR (parser:winreg AND key_path:"*Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\*") OR parser:"prefetch" OR parser:"appcompatcache" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR parser:bam OR (parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
   tags: ['win-execution','T1204','Execution','User-Execution']
   emojis: ['MARK']
   create_view: true
@@ -272,3 +268,43 @@ win_defender_disableps_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Disabled via PS'
+
+win_appcertdll_tagger:
+  query_string:  'parser:winreg AND key_path:"*Control\\Session Manager*" AND values:*AppCertDlls*'
+  tags: ['appcertdlls','Persistence','T1546.009']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.009-AppCertDlls'
+
+win_appinitdll_tagger:
+  query_string:  'parser:winreg AND key_path:"*CurrentVersion\\Windows*" AND values:"*LoadAppInit_DLLs: \[REG_DWORD_LE\] 1*"'
+  tags: ['appinitdllloadset','Persistence','T1546.010']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.010-LoadAppInitDLL Registry Value Enabled'
+
+#sources
+#https://jpcertcc.github.io/ToolAnalysisResultSheet/details/SDB-UAC-Bypass.htm
+#https://pentestlab.blog/2019/12/16/persistence-application-shimming/
+
+win_appshimming_tagger:
+  query_string:  '(parser:winreg AND (key_path:"*AppCompatFlags\\InstalledSDB*" OR key_path:"*AppCompatFlags\\Custom*")) OR (parser:prefetch AND executable:*sdbinst.exe*) OR (parser:winreg AND key_path:"*Windows\\CurrentVersion\\Uninstall\*" AND values:*sdbinst\.exe*)'
+  tags: ['appshimming','Persistence','T1546.011']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.011-Application Shimming Indicator'
+
+win_sysinternals_tagger:
+  query_string:  'parser:winreg AND key_path:"*Software\\Sysinternals\\*" AND values:"*EulaAccepted: \[REG_DWORD_LE\] 1*"'
+  tags: ['SysInternals','Software']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Software-SysInternals Usage Indicator'
+
+#source https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll
+win_netshhelper_tagger:
+  query_string:  'parser:winreg AND key_path:"*Microsoft\\NetSh*" AND (values:"*C:\\*" OR values:"*D:\\*")'
+  tags: ['Netsh Helper','Persistence','T1546.007']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.007-Netsh Helper Tampering Indicator'
