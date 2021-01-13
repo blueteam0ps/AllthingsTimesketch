@@ -12,5 +12,6 @@ git clone the repo
 chmod a+x deployts.sh
 That is it. :)
 
-<b>Pre-built Queries</b>
-I have created a list of TS queries which you may come in handy during investigations. Refer to Queries.txt and pls feel free to contribute.
+<b>Tags file for faster triage</b>
+Use the following tags file to get most out of TS
+https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
