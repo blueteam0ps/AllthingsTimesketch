@@ -1,6 +1,5 @@
-# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging.
-# Reference articles which were used to build the queries are stated just above the query.
-# Created by Janantha Marasinghe
+# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
+# Collated by J Marasinghe 
 
 win_usrprofile_tagger:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
@@ -17,14 +16,14 @@ win_powershell_mimikatz_tagger:
   view_name: 'T1003.001-Mimikatz Execution via PowerShell'
 
 win_disable_defender_tagger:
-  query_string:  'source_name\:"Microsoft-Windows-Windows Defender" AND (event_identifier\:5001 OR event_identifier\:5007 OR event_identifier\:5010 OR event_identifier\:5012)'
+  query_string:  'source_name\:"Microsoft-Windows-Windows Defender" AND (event_identifier\:5001 OR event_identifier\:5010 OR event_identifier\:5012)'
   tags: ['win-defender','T1562','Defense Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Win Defender Disabled'
 
 win_service_installation_execution_tagger:
-  query_string:  '(source_name\:"Service Control Manager" OR source_name\:"EventLog") AND (event_identifier\:7045 OR event_identifier\:4697 OR event_identifier\:6005) AND NOT message\:"*svchost.exe -k print*"'
+  query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message\:"*svchost.exe -k print*"'
   tags: ['win-service','T1543','T1569','Persistence']
   emojis: ['MARK']
   create_view: true
@@ -66,7 +65,7 @@ win_sus_powershell__tagger:
   view_name: 'T1059.001-Suspicious PowerShell Commands'
 
 win_sus_bitsjobs_tagger:
-  query_string:  'event_identifier:59 AND source_name:"Microsoft-Windows-Bits-Client" AND NOT strings:"*fs.microsoft.com*"'
+  query_string:  'source_name:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND NOT strings:*microsoft.com* AND NOT strings:*sfx.ms* AND NOT strings:*live.com* AND NOT strings:*akamaized.net* AND NOT strings:*onenote.net* AND NOT strings:*storage.googleapis.com* AND NOT strings:*gvt* AND NOT strings:*msecnd.net*'
   tags: ['win-bitstransfer','T1197','Persistence']
   emojis: ['MARK']
   create_view: true
@@ -230,7 +229,7 @@ win_eventlog_clear_tagger:
   view_name: 'T1070.001-Windows Log Cleared'
 
 win_autoruns_tagger:
-  query_string:  'parser:windows_run'
+  query_string:  'parser:windows_run AND (message:*exe* OR message:*.dll* OR message:*.bat* OR message:*.ps1*)'
   tags: ['win-autorun','Persistence','T1547.001']
   emojis: ['MARK']
   create_view: true
@@ -312,3 +311,11 @@ win_netshhelper_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1546.007-Netsh Helper Tampering Indicator'
+
+#source https://pentestlab.blog/2020/02/12/persistence-rid-hijacking/
+win_rid_hijacking_tagger:
+  query_string:  'parser:winreg AND source_long:"Registry Key - User Account Information" AND (message:"*RID: 500*" AND NOT message:"*Username: Administrator*")'
+  tags: ['RID Hijack','Persistence','T1078.003']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1078.003-RID Hijacking Indicator'
