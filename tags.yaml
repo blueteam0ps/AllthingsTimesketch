@@ -319,3 +319,32 @@ win_rid_hijacking_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078.003-RID Hijacking Indicator'
+
+win_ps_config_tagger:
+  query_string:  'parser:winreg AND key_path:"*Microsoft\\PowerShell*" AND (message:*EnableScript* OR message:*ExecutionPolicy* OR message:*EnableModuleLogging*)'
+  tags: ['PowerShell Config','T1059.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1059.001-PowerShell Configuration'
+
+win_proxyconfig_tagger:
+  query_string:  'key_path:"HKEY_LOCAL_MACHINE\\Software\\*\\Microsoft\\Windows\\CurrentVersion\\Internet Settings*" AND (values:*AutoDetect* OR values:*ProxyServer* OR values:*ProxyOverride* OR values:*ProxyEnable*)'
+  tags: ['Proxy','T1090']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1090-Proxy Config'
+
+win_wmi_wmipersistence_tagger:
+  query_string:  'parser:winevtx AND (message:"*commandlinetemplate*" OR message:"*consumer\.CommandLineTemplate*" OR message:*CommandLineEventConsumer* OR message:*Q29tbWFuZExpbmVFdmVudENvbnN1bWVy* OR message:"*Set-WmiInstance*")'
+  tags: ['WMI Event Subscription','T1546.003','Persistence']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.003-WMI Event Subscription'
+
+#source https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
+win_auditpol_interference_tagger:
+  query_string:  'parser:winevtx AND (message:*auditpol* AND message:"*success:disable*")'
+  tags: ['Audit Log Impairement','T1562.002','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.002-Window Audit Log Impairement'
