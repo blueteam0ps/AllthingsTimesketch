@@ -13,5 +13,5 @@ chmod a+x deployts.sh
 That is it. :)
 
 <b>Tags file for faster triage</b>
-Use the following tags file to get most out of TS
+.Use the following tags file to get most out of TS
 https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
