@@ -343,8 +343,22 @@ win_wmi_wmipersistence_tagger:
 
 #source https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
 win_auditpol_interference_tagger:
-  query_string:  'parser:winevtx AND (message:*auditpol* AND message:"*success:disable*")'
+  query_string:  'parser:winevtx AND message:*auditpol* AND (message:*disable* OR message:*clear* OR message:*remove* OR message:*restore*)'
   tags: ['Audit Log Impairement','T1562.002','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.002-Window Audit Log Impairement'
+
+win_timezone_tagger:
+  query_string:  'parser:winreg AND key_path:"*Control\\TimeZoneInformation*"'
+  tags: ['Timezone']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Timezone'
+
+win_rdp_tunnel_tagger:
+  query_string:  'parser:winevtx AND event_identifier:4624 AND xml_string:"*LogonType\">10*" AND xml_string:"*IpAddress\">127.0.0.1*"'
+  tags: ['RDP-Tunnel','T1021.001','Lateral-Movement','Defense-Evasion','T1572']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1572-RDP Tunneling'
