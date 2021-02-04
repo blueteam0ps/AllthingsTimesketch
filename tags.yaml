@@ -362,3 +362,11 @@ win_rdp_tunnel_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1572-RDP Tunneling'
+  
+win_domain_trust_discovery_tagger:
+  query_string:  'parser:winevtx AND (event_identifier:4104 OR event_identifier:4688) AND (xml_string:*domainlist* OR xml_string:*trustdmp* OR xml_string:*dcmodes* OR xml_string:*adinfo* OR xml_string:*dclist* OR xml_string:"*computer_pwdnotreqd*" OR xml_string:"*objectcategory=*" OR xml_string:"*-subnets -f*" OR xml_string:"*name=\"Domain Admins\"*" OR xml_string:"*-sc u:*" OR xml_string:"*domainncs*" OR xml_string:"*dompol*" OR xml_string:"*oudmp*" OR xml_string:"*subnetdmp*" OR xml_string:"*gpodmp*" OR xml_string:"*fspdmp*" OR xml_string:"*users_noexpire*" OR xml_string:"*computers_active*" OR xml_string:"*/domain_trusts*" OR xml_string:"*/all_trusts*" OR xml_string:"*/dclist*")'
+  tags: ['Domain-Trust','Discovery','T1482','T1018']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1482-Domain Trust Discovery'
+
