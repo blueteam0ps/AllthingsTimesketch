@@ -1,4 +1,4 @@
-# This customised Timesketch contains time saver tags for high fidelity indicators and generic OS configuration that can speed up triaging.
+# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
 # Collated by J Marasinghe 
 
 win_usrprofile_tagger:
@@ -30,7 +30,7 @@ win_service_installation_execution_tagger:
   view_name: 'T1543-Installation or Execution of a Windows Service'
 
 win_firewall_activity_tagger:
-  query_string:  '(parser\:"winreg/winreg_default" AND key_path\:"HKEY_LOCAL_MACHINE\\System\\ControlSet001\\Services\\SharedAccess\\Parameters\\FirewallPolicy\\FirewallRules") OR (source_name\:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier\:2005)'
+  query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (source_name\:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier\:2005)'
   tags: ['win-firewall','T1562','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
@@ -320,6 +320,13 @@ win_rid_hijacking_tagger:
   create_view: true
   view_name: 'T1078.003-RID Hijacking Indicator'
 
+win_CA_certs_tagger:
+  query_string:  '(key_path:"*Root\\Certificates*" OR key_path:"*AuthRoot\\Certificates*" OR key_path:"*CA\Certificates*") AND display_name:"*config*" AND message:*REG_BINARY* AND NOT (message:*4F65566336DB6598581D584A596C87934D5F2AB4* OR message:*3B1EFD3A66EA28B16697394703A72CA340A05BD5* OR message:*A43489159A520F0D93D032CCAF37E7FE20A8B419* OR message:*8F43288AD272F3103B6FB1428485EA3014C0BCFE* OR message:*7F88CD7223F3C813818C994614A89C99FA3B5247* OR message:*245C97DF7514E7CF2DF8BE72AE957B9E04741E85* OR message:*18F7C1FCC3090203FD5BAA2F861A754976C8DD25* OR message:*4EB6D578499B1CCF5F581EAD56BE3D9B6744A5E5* OR message:*3679CA35668772304D30A5FB873B0FA77BB70D54* OR message:*BE36A4562FB2EE05DBB3D32323ADF445084ED656* OR message:*0563B8630D62D75ABBC8AB1E4BDFB5A899B24D43* OR message:*CDD4EEAE6000AC7F40C3802C171E30148030C072* OR message:*B1BC968BD4F49D622AA89A81F2150152A41D829C* OR message:*DF3C24F9BFD666761B268073FE06D1CC8D4F82A4* OR message:*75E0ABB6138512271C04F85FDDDE38E4B7242EFE* OR message:*A8985D3A65E5E5C4B2D7D66D40C6DD2FB19C5436* OR message:*D4DE20D05E66FC53FE1A50882C78DB2852CAE474* OR message:*92B46C76E13054E104F230517E6E504D43AB10B5* OR message:*51501FBFCE69189D609CFAF140C576755DCC1FDF* OR message:*742C3192E607E424EB4549542BE1BBC53E6174E2* OR message:*0119E81BE9A14CD8E22F40AC118C687ECBA3F4D8* OR message:*06F1AA330B927B753A40E68CDF22E34BCBEF3352* OR message:*31F9FC8BA3805986B721EA7295C65B3A44534274* OR message:*D69B561148F01C77C54578C10926DF5B856976AD* OR message:*AFE5D244A8D1194230FF479FE2F897BBCD7A8CB4* OR message:*6252DC40F71143A22FDE9EF7348E064251B18118* OR message:*AD7E1C28B064EF8F6003402014C3D0E3370EB58A* OR message:*DAC9024F54D8F6DF94935FB1732638CA6AD77C13* OR message:*02FAF3E291435468607857694DF5E45B68851868* OR message:*02FAF3E291435468607857694DF5E45B68851868* OR message:*02FAF3E291435468607857694DF5E45B68851868* OR message:*02FAF3E291435468607857694DF5E45B68851868* OR message:*5FB7EE0633E259DBAD0C4C9AE6D38F1A61C7DC25* OR message:*91C6D6EE3E8AC86384E548C299295C756C817B81* OR message:*E12DFB4B41D7D9C32B30514BAC1D81D8385E2D46* OR message:*2796BAE63F1801E277261BA0D77770028F20EEE4*)'
+  tags: ['Root Certificate','Defense-Evasion','T1553.004']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1553.004-Hashes of Root CAs'
+
 win_ps_config_tagger:
   query_string:  'parser:winreg AND key_path:"*Microsoft\\PowerShell*" AND (message:*EnableScript* OR message:*ExecutionPolicy* OR message:*EnableModuleLogging*)'
   tags: ['PowerShell Config','T1059.001']
@@ -362,7 +369,7 @@ win_rdp_tunnel_tagger:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1572-RDP Tunneling'
-  
+
 win_domain_trust_discovery_tagger:
   query_string:  'parser:winevtx AND (event_identifier:4104 OR event_identifier:4688) AND (xml_string:*domainlist* OR xml_string:*trustdmp* OR xml_string:*dcmodes* OR xml_string:*adinfo* OR xml_string:*dclist* OR xml_string:"*computer_pwdnotreqd*" OR xml_string:"*objectcategory=*" OR xml_string:"*-subnets -f*" OR xml_string:"*name=\"Domain Admins\"*" OR xml_string:"*-sc u:*" OR xml_string:"*domainncs*" OR xml_string:"*dompol*" OR xml_string:"*oudmp*" OR xml_string:"*subnetdmp*" OR xml_string:"*gpodmp*" OR xml_string:"*fspdmp*" OR xml_string:"*users_noexpire*" OR xml_string:"*computers_active*" OR xml_string:"*/domain_trusts*" OR xml_string:"*/all_trusts*" OR xml_string:"*/dclist*")'
   tags: ['Domain-Trust','Discovery','T1482','T1018']
@@ -370,3 +377,17 @@ win_domain_trust_discovery_tagger:
   create_view: true
   view_name: 'T1482-Domain Trust Discovery'
 
+win_system_restore_disabled__tagger:
+  query_string:  'parser:winevtx AND event_identifier:8195 AND message:*disabled*'
+  tags: ['System-Restore-Disabled','T1490','Impact']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1490-System Restore Disabled'
+
+#source:https://www.mssqltips.com/sqlservertip/1735/auditing-failed-logins-in-sql-server/
+win_sql_svr_logins_tagger:
+  query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND (event_identifier:18456 OR event_identifier:18454)'
+  tags: ['SQL','Login','T1078','Initial-Access']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1078-SQL Server Login Activity'
