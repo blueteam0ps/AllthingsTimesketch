@@ -100,7 +100,7 @@ win_postexploit_framework_tagger:
   view_name: 'T1219-Post Exploitation Tool Detection'
 
 win_execution_indicator_tagger:
-  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR (parser:winreg AND key_path:"*Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\*") OR parser:"prefetch" OR parser:"appcompatcache" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR parser:bam OR (parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
+  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR (parser:winreg AND key_path:"*Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\*" AND (message:"*\.exe" OR message:"*\.lnk")) OR parser:"prefetch" OR parser:"appcompatcache" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR parser:bam OR (parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
   tags: ['win-execution','T1204','Execution','User-Execution']
   emojis: ['MARK']
   create_view: true
@@ -385,9 +385,37 @@ win_system_restore_disabled__tagger:
   view_name: 'T1490-System Restore Disabled'
 
 #source:https://www.mssqltips.com/sqlservertip/1735/auditing-failed-logins-in-sql-server/
-win_sql_svr_logins_tagger:
-  query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND (event_identifier:18456 OR event_identifier:18454)'
-  tags: ['SQL','Login','T1078','Initial-Access']
+win_sql_svr_login_success_tagger:
+  query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND (event_identifier:18453 OR event_identifier:18454)'
+  tags: ['SQL','login-success','T1078','Initial-Access']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1078-SQL Server Login Activity'
+  view_name: 'T1078-SQL Server Logon Success'
+
+win_sql_svr_login_failure_tagger:
+  query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND event_identifier:18456'
+  tags: ['SQL','login-fail','T1078','Initial-Access']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1110-SQL Server Failure'
+
+win_cobaltstrike_indicator_1_tagger:
+  query_string:  'parser:winevtx AND (event_identifier:4624 OR event_identifier:4625) AND xml_string:"*make_token*"'
+  tags: ['authentication','cobaltstrike','T1134','Command-Control']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1134-Cobalt Strike make_token'
+
+win_patch_install_success:
+  query_string:  'parser:winevtx AND display_name:"*System\.evtx" AND event_identifier:19'
+  tags: ['win','Success','Patch']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Windows Patch Installation Success'
+
+win_patch_install_failed:
+  query_string:  'parser:winevtx AND display_name:"*System\.evtx" AND event_identifier:19'
+  tags: ['win','Failed','Patch']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Windows Patch Installation Failed'
