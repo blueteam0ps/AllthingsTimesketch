@@ -407,7 +407,7 @@ win_patch_install_success:
   view_name: 'Windows Patch Installation Success'
 
 win_patch_install_failed:
-  query_string:  'parser:winevtx AND display_name:"*System\.evtx" AND event_identifier:19'
+  query_string:  'parser:winevtx AND display_name:"*System\.evtx" AND event_identifier:20'
   tags: ['win','Failed','Patch']
   emojis: ['MARK']
   create_view: true
