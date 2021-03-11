@@ -412,3 +412,17 @@ win_patch_install_failed:
   emojis: ['MARK']
   create_view: true
   view_name: 'Windows Patch Installation Failed'
+
+win_account_lockedout:
+  query_string:  'parser:winevtx AND event_identifier:4740'
+  tags: ['win','acc','lockout','T1110']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1110-Account Lockout'
+
+win_account_unlocked:
+  query_string:  'parser:winevtx AND event_identifier:4767'
+  tags: ['win','acc','unlock','T1078']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1078-Account Unlocked' 
