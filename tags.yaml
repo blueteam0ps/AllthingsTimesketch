@@ -16,14 +16,14 @@ win_powershell_mimikatz_tagger:
   view_name: 'T1003.001-Mimikatz Execution via PowerShell'
 
 win_disable_defender_tagger:
-  query_string:  'source_name\:"Microsoft-Windows-Windows Defender" AND (event_identifier\:5001 OR event_identifier\:5010 OR event_identifier\:5012)'
+  query_string:  'source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:5010 OR event_identifier:5012)'
   tags: ['win-defender','T1562','Defense Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Win Defender Disabled'
 
 win_service_installation_execution_tagger:
-  query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message\:"*svchost.exe -k print*"'
+  query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message:"*svchost.exe -k print*"'
   tags: ['win-service','T1543','T1569','Persistence']
   emojis: ['MARK']
   create_view: true
@@ -37,7 +37,7 @@ win_firewall_activity_tagger:
   view_name: 'T1562.004-Windows Firewall Rules'
 
 win_rdp_activity_tagger:
-  query_string:  '(source_name\:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier\:21 OR event_identifier\:22 OR event_identifier\:24 OR event_identifier\:25 OR event_identifier\:39 OR event_identifier\:40 OR event_identifier\:23 OR event_identifier\:1101 OR event_identifier\:1103 OR event_identifier\:1105 OR event_identifier\:1102)) OR (source_name\:"Microsoft-Windows-Security-Auditing" AND event_identifier\:4624 AND xml_string\:"*LogonType\">10*") AND NOT parser:"winreg*"'
+  query_string:  '(source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") AND NOT parser:"winreg*"'
   tags: ['win-rdp','T1021','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
