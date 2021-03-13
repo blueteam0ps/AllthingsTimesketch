@@ -9,14 +9,14 @@ win_usrprofile_tagger:
   view_name: 'Windows User Profiles'
 
 win_powershell_mimikatz_tagger:
-  query_string:  'data_type:windows\:evtx\:record AND source_name:*powershell* AND (message:*System\.Reflection\.AssemblyName* OR message:*System\.Reflection\.Emit\.AssemblyBuilderAccess* OR message:*System\.Runtime\.InteropServices\.MarshalAsAttribute* OR message:*TOKEN_PRIVILEGES* OR message:*SE_PRIVILEGE_ENABLED*)'
+  query_string:  'parser:winevtx AND source_name:*powershell* AND (message:*System\.Reflection\.AssemblyName* OR message:*System\.Reflection\.Emit\.AssemblyBuilderAccess* OR message:*System\.Runtime\.InteropServices\.MarshalAsAttribute* OR message:*TOKEN_PRIVILEGES* OR message:*SE_PRIVILEGE_ENABLED*)'
   tags: ['win-mimikatz','T1003','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1003.001-Mimikatz Execution via PowerShell'
 
 win_disable_defender_tagger:
-  query_string:  'source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:5010 OR event_identifier:5012)'
+  query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:5010 OR event_identifier:5012)'
   tags: ['win-defender','T1562','Defense Evasion']
   emojis: ['MARK']
   create_view: true
@@ -30,21 +30,21 @@ win_service_installation_execution_tagger:
   view_name: 'T1543-Installation or Execution of a Windows Service'
 
 win_firewall_activity_tagger:
-  query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (source_name\:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier\:2005)'
+  query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (parser:winevtx AND source_name:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier:2005)'
   tags: ['win-firewall','T1562','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.004-Windows Firewall Rules'
 
 win_rdp_activity_tagger:
-  query_string:  '(source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") AND NOT parser:"winreg*"'
+  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") AND NOT parser:"winreg*"'
   tags: ['win-rdp','T1021','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.001-RDP Activity'
 
 win_UAC_disabled_tagger:
-  query_string:  'key_path\:"*Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA" AND message:"*DisplayType: [REG_DWORD_LE] 0*"'
+  query_string:  'parser:winreg AND key_path:"*Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA" AND message:"*DisplayType: [REG_DWORD_LE] 0*"'
   tags: ['win-uac','T1548','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
@@ -58,28 +58,28 @@ win_sticky_key_tagger:
   view_name: 'T1183-Image File Execution Options Injection'
 
 win_sus_powershell__tagger:
-  query_string:  'source_name:*powershell* AND message:(\/\.\*\\\-w\.\*h\.\*\/ \/\.\*\\\-NoP\.\*\/ \/\.\*\\\-noni\.\*\/ \/\.\*\\\-ec\.\*\/ \/\.\*\\\-en\.\*\/)'
+  query_string:  'parser:winevtx AND source_name:*powershell* AND message:(\/\.\*\\\-w\.\*h\.\*\/ \/\.\*\\\-NoP\.\*\/ \/\.\*\\\-noni\.\*\/ \/\.\*\\\-ec\.\*\/ \/\.\*\\\-en\.\*\/)'
   tags: ['win-powershell','T1059','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-Suspicious PowerShell Commands'
 
 win_sus_bitsjobs_tagger:
-  query_string:  'source_name:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*")'
+  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-Bits-Client") AND (event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*"))'
   tags: ['win-bitstransfer','T1197','Persistence']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1197-Suspicious BitsTransfer Activity'
 
 win_sus_logon_failure_tagger:
-  query_string:  'data_type:"windows:evtx:record" AND source_name:"Microsoft-Windows-Security-Auditing" AND (event_identifier:4625 OR event_identifier:4767 OR event_identifier:4740 OR event_identifier:4776)'
+  query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND (event_identifier:4625 OR event_identifier:4767 OR event_identifier:4740 OR event_identifier:4776)'
   tags: ['win-logonfailures','T1110','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1110-Suspicious Logon Failures'
 
 win_dc_sync_tagger:
-  query_string:  'data_type:"windows:evtx:record" AND event_identifier:5136 AND message:*ntsecuritydescriptor* AND (message:*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2* OR message:*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2* OR message:*89e95b76-444d-4c62-991a-0facbeda640c*)'
+  query_string:  'parser:winevtx AND event_identifier:5136 AND message:*ntsecuritydescriptor* AND (message:"*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*" OR message:"*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*" OR message:"*89e95b76-444d-4c62-991a-0facbeda640c*")'
   tags: ['win-dcsync','T1003.006','Credential-Access']
   emojis: ['MARK']
   create_view: true
@@ -142,7 +142,7 @@ win_reg_seclog_disabled_tagger:
   view_name: 'T1562.002-Windows Security Log Disabled via MiniNt'
 
 win_smbexec_tagger:
-  query_string:  'event_identifier:7045 AND (message:*BTOBTO* OR message:*execute.bat*)'
+  query_string:  'parser:winevtx AND event_identifier:7045 AND (message:*BTOBTO* OR message:*execute.bat*)'
   tags: ['win-smbexec','T1021.002','Impacket','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
@@ -194,7 +194,7 @@ win_base64encoded_gzipPE_tagger:
 
 #source:http://az4n6.blogspot.com/2020/02/detecting-laterial-movment-with-winscp.html
 win_ssh_exfil_lm_tagger:
-  query_string:  'parser\:winevtx AND source_name:*parser\:winevtx AND (event_identifier\:7045 AND xml_string\:"*LogonType\">5*" AND xml_string\:"TargetUserName\">sshd*" AND xml_string\:"TargetDomainName\">VIRTUAL*")'
+  query_string:  'parser:winevtx AND (event_identifier:7045 AND xml_string:"*LogonType\">5*" AND xml_string:"TargetUserName\">sshd*" AND xml_string:"TargetDomainName\">VIRTUAL*")'
   tags: ['win-ssh-lateral','Lateral-Movement','T1048.002','Exfiltration','T1021.004']
   emojis: ['MARK']
   create_view: true
@@ -214,12 +214,27 @@ win_eventlog_svc_stopped_tagger:
   create_view: true
   view_name: 'T1562.002-Event Log Service Disabled'
 
-win_applocker_events_tagger:
-  query_string:  'parser:winevtx AND (event_identifier:8003 OR event_identifier:8004) AND source_name:*AppLocker*'
-  tags: ['win-evt-log','Execution','T1059.003','AppLocker']
+win_applocker_denied_events_tagger:
+  query_string:  'parser:winevtx AND source_name:*AppLocker* AND (event_identifier:8003 OR event_identifier:8004 OR event_identifier:8006 OR event_identifier:8007)'
+  tags: ['Execution','T1059.003','AppLocker-denied']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1059.003-AppLocker Events'
+  view_name: 'T1059.003-AppLocker Denied Events'
+
+win_applocker_allowed_events_tagger:
+  query_string:  'parser:winevtx AND source_name:*AppLocker* AND (event_identifier:8002 OR event_identifier:8005)'
+  tags: ['Execution','T1059.003','AppLocker-allowed']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1059.003-AppLocker Allowed Events'
+
+win_applocker_disabled__tagger:
+  query_string:  'parser:winevtx AND source_name:*AppLocker* AND event_identifier:8008'
+  tags: ['T1562','Defense-Evasion','','AppLocker-Disabled']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562-AppLocker Disabled'
+
 
 win_eventlog_clear_tagger:
   query_string:  'parser:winevtx AND source_name:"Windows-Security-Auditing" AND event_identifier:1102'
