@@ -1,5 +1,5 @@
-# This customised Timesketch contains pre-built searches to identify potential pivot points and system information.
-# Created by J Marasinghe 
+# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
+# Collated by J Marasinghe 
 
 win_usrprofile_tagger:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
@@ -9,7 +9,7 @@ win_usrprofile_tagger:
   view_name: 'Windows User Profiles'
 
 win_powershell_mimikatz_tagger:
-  query_string:  'data_type:"windows\:evtx\:record" AND source_name:*powershell* AND (message:"*System\.Reflection\.AssemblyName*" OR message:"*System\.Reflection\.Emit\.AssemblyBuilderAccess*" OR message:"*System\.Runtime\.InteropServices\.MarshalAsAttribute*" OR message:*TOKEN_PRIVILEGES* OR message:"*SE_PRIVILEGE_ENABLED*")'
+  query_string:  'data_type:windows\:evtx\:record AND source_name:*powershell* AND (message:*System\.Reflection\.AssemblyName* OR message:*System\.Reflection\.Emit\.AssemblyBuilderAccess* OR message:*System\.Runtime\.InteropServices\.MarshalAsAttribute* OR message:*TOKEN_PRIVILEGES* OR message:*SE_PRIVILEGE_ENABLED*)'
   tags: ['win-mimikatz','T1003','Credential-Access']
   emojis: ['MARK']
   create_view: true
@@ -30,7 +30,7 @@ win_service_installation_execution_tagger:
   view_name: 'T1543-Installation or Execution of a Windows Service'
 
 win_firewall_activity_tagger:
-  query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (source_name:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier:2005)'
+  query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (source_name\:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier\:2005)'
   tags: ['win-firewall','T1562','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
@@ -65,7 +65,7 @@ win_sus_powershell__tagger:
   view_name: 'T1059.001-Suspicious PowerShell Commands'
 
 win_sus_bitsjobs_tagger:
-  query_string:  'parser:winevtx AND source_name\:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*)'
+  query_string:  'source_name:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*")'
   tags: ['win-bitstransfer','T1197','Persistence']
   emojis: ['MARK']
   create_view: true
@@ -142,14 +142,14 @@ win_reg_seclog_disabled_tagger:
   view_name: 'T1562.002-Windows Security Log Disabled via MiniNt'
 
 win_smbexec_tagger:
-  query_string:  'parser:winevtx AND event_identifier:7045 AND (message:*BTOBTO* OR message:*execute.bat*)'
+  query_string:  'event_identifier:7045 AND (message:*BTOBTO* OR message:*execute.bat*)'
   tags: ['win-smbexec','T1021.002','Impacket','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.002-Remote execution of SMBExec'
 
 win_macroenableddoc__tagger:
-  query_string:  'parser:winreg* AND key_path:"*Trusted Documents\\TrustRecord*"'
+  query_string:  'parser:winreg AND key_path:"*Trusted Documents\\TrustRecord*"'
   tags: ['win-macro','Execution','T1204.002','Macro-enabled','Execution']
   emojis: ['MARK']
   create_view: true
@@ -194,7 +194,7 @@ win_base64encoded_gzipPE_tagger:
 
 #source:http://az4n6.blogspot.com/2020/02/detecting-laterial-movment-with-winscp.html
 win_ssh_exfil_lm_tagger:
-  query_string:  'parser:winevtx AND (event_identifier:7045 AND xml_string:"*LogonType\">5*" AND xml_string:"TargetUserName\">sshd*" AND xml_string:"TargetDomainName\">VIRTUAL*")'
+  query_string:  'parser\:winevtx AND source_name:*parser\:winevtx AND (event_identifier\:7045 AND xml_string\:"*LogonType\">5*" AND xml_string\:"TargetUserName\">sshd*" AND xml_string\:"TargetDomainName\">VIRTUAL*")'
   tags: ['win-ssh-lateral','Lateral-Movement','T1048.002','Exfiltration','T1021.004']
   emojis: ['MARK']
   create_view: true
@@ -328,7 +328,7 @@ win_ps_config_tagger:
   view_name: 'T1059.001-PowerShell Configuration'
 
 win_proxyconfig_tagger:
-  query_string:  'parser:winreg* AND key_path:"HKEY_LOCAL_MACHINE\\Software\\*\\Microsoft\\Windows\\CurrentVersion\\Internet Settings*" AND (values:*AutoDetect* OR values:*ProxyServer* OR values:*ProxyOverride* OR values:*ProxyEnable*)'
+  query_string:  'key_path:"HKEY_LOCAL_MACHINE\\Software\\*\\Microsoft\\Windows\\CurrentVersion\\Internet Settings*" AND (values:*AutoDetect* OR values:*ProxyServer* OR values:*ProxyOverride* OR values:*ProxyEnable*)'
   tags: ['Proxy','T1090']
   emojis: ['MARK']
   create_view: true
@@ -425,4 +425,4 @@ win_account_unlocked:
   tags: ['win','acc','unlock','T1078']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1078-Account Unlocked' 
+  view_name: 'T1078-Account Unlocked'
