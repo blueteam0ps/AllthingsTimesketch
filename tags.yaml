@@ -65,7 +65,7 @@ win_sus_powershell__tagger:
   view_name: 'T1059.001-Suspicious PowerShell Commands'
 
 win_sus_bitsjobs_tagger:
-  query_string:  'source_name:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z* OR strings:"*\.png*")'
+  query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Bits-Client" AND event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*)'
   tags: ['win-bitstransfer','T1197','Persistence']
   emojis: ['MARK']
   create_view: true
