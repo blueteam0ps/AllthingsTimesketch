@@ -441,3 +441,11 @@ win_account_unlocked:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078-Account Unlocked'
+
+#Observed in various post-compromise scenarios
+win_sus_service:
+  query_string:  'parser:winevtx AND event_identifier:7045 AND (message:*COMSPEC* OR message:*powershell*)'
+  tags: ['win-service','Persistence', 'T1543.003']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1543.003-Suspicious Windows Service Creation'
