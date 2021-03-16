@@ -194,7 +194,7 @@ win_base64encoded_gzipPE_tagger:
 
 #source:http://az4n6.blogspot.com/2020/02/detecting-laterial-movment-with-winscp.html
 win_ssh_exfil_lm_tagger:
-  query_string:  'parser:winevtx AND (event_identifier:7045 AND xml_string:"*LogonType\">5*" AND xml_string:"TargetUserName\">sshd*" AND xml_string:"TargetDomainName\">VIRTUAL*")'
+  query_string:  'parser:winevtx AND (event_identifier:4624 AND xml_string:"*LogonType\">5*" AND xml_string:"TargetUserName\">sshd*" AND xml_string:"TargetDomainName\">VIRTUAL*")'
   tags: ['win-ssh-lateral','Lateral-Movement','T1048.002','Exfiltration','T1021.004']
   emojis: ['MARK']
   create_view: true
