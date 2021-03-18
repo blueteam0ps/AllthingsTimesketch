@@ -448,4 +448,19 @@ win_sus_service:
   tags: ['win-service','Persistence', 'T1543.003']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1543.003-Suspicious Windows Service Creation'
+  view_name: 'T1543.003-Suspicious Windows Service Creation' 
+
+#source:https://medium.com/@sieutruc/detection-methods-for-the-cve-2020-1472-zerologon-by-using-the-existing-windows-log-9761ee69d9fc
+win_zero_logon:
+  query_string:  'parser:winevtx AND (event_identifier:5805 OR event_identifier:4742  OR event_identifier:5829 OR event_identifier:5827 OR event_identifier:5828 OR event_iden>
+  tags: ['zerologon','Privilege-Escalation', 'T1068']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1068-Zerologon Indicator'
+
+win_domain_trust_discovery_execution:
+  query_string:  'tag:T1204 AND (message:*nltest* | message:*adfind* | message:*dsquery*)'
+  tags: ['Domain Trust','Discovery', 'T1482']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1482-Execution of Domain Trust Discovery Tools' 
