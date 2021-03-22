@@ -7,7 +7,8 @@ This repository contains helper/timesaver scripts/queries related to Timesketch 
 This script will automatically get the latest docker version of Timesketch and Plaso. It will download the latest tagger file from this repo as well. Then it creates the first user account in Timesketch.
 
 <b>Usage</b>
-Note: You need to be running Ubuntu 20.04 LTS for this. 
+Note: You need to be running Ubuntu 20.04 LTS for this.
+
 wget https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh
 chmod a+x /tsplaso_docker_install.sh
 
