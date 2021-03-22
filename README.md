@@ -12,6 +12,7 @@ Note: You need to be running Ubuntu 20.04 LTS for this.
 wget https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh
 
 chmod a+x /tsplaso_docker_install.sh
+
 ./tsplaso_docker_install.sh
 
 <h2>Timesketch and Plaso Auto Install & Configuration Script(Old method)</h2>
