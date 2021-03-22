@@ -1,4 +1,4 @@
-# AllthingsTimeSketch
+# AllthingsTimesketch
 
 <h1>Purpose</h1>
 This repository contains helper/timesaver scripts/queries related to Timesketch and Plaso.
