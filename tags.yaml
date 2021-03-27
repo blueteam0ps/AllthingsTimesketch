@@ -489,7 +489,7 @@ win_msoffice_doc_activity:
 #source:https://www.sans.org/reading-room/whitepapers/incident/disrupting-empire-identifying-powershell-empire-command-control-activity-38315
 win_powershell_empire:
   query_string:  'parser:winevtx AND event_identifier:600 AND message:"HostName=ConsoleHost" AND message:"*powershell -noP -sta -w 1 -enc*"'
-  tags: ['win','Powershell',''Command-and-Control','Execution','T1059.001','T1071.001']
+  tags: ['win','Powershell','Command-and-Control','Execution','T1059.001','T1071.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1071.001 or T1059.001-PowerShell Empire Indicator'
