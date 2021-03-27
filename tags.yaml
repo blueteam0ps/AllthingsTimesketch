@@ -471,3 +471,25 @@ win_file_save_open:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1560 or T1083-File Save or Discovery'
+
+win_defender_exclusions:
+  query_string:  '(parser:winreg AND key_path:"*Windows Defender\\Exclusions\*" AND NOT message:*empty*) OR (parser:winevtx AND event_identifier:5007 AND message:*Exclusions*)'
+  tags: ['win','Defense-Evasion','T1562.001','Defender']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-Windows Defender Exclusions'
+
+win_msoffice_doc_activity:
+  query_string:  'parser:winreg AND (key_path:"*Security\\Trusted Documents\TrustRecords*" OR key_path:"*Reading Locations*")'
+  tags: ['win','Initial-Access','Collection','T1566','T1005','MSOFFICE']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1566 or T1005 -MS Office Doc Activity'
+
+#source:https://www.sans.org/reading-room/whitepapers/incident/disrupting-empire-identifying-powershell-empire-command-control-activity-38315
+win_powershell_empire:
+  query_string:  'parser:winevtx AND event_identifier:600 AND message:"HostName=ConsoleHost" AND message:"*powershell -noP -sta -w 1 -enc*"'
+  tags: ['win','Powershell',''Command-and-Control','Execution','T1059.001','T1071.001']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1071.001 or T1059.001-PowerShell Empire Indicator'
