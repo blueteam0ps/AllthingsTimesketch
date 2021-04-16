@@ -1,5 +1,6 @@
-# This customised Timesketch contains time saver tags for high fidelity indicators that can speed up triaging
-# Collated by J Marasinghe 
+# This Timesketch tagger file contains pre-built searches to tag most appropriate events in the supertimeline. MITRE technique and Tactic is also tagged where applicable.
+# Searches were developed as a result of research carried out by others (referenced where applicable) and that were performed by me.
+# Created by J Marasinghe
 
 win_usrprofile_tagger:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
