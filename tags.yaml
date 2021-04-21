@@ -1,5 +1,5 @@
 # This Timesketch tagger file contains pre-built searches to tag most appropriate events in the supertimeline. MITRE technique and Tactic is also tagged where applicable.
-# Searches were developed as a result of research carried out by others (referenced where applicable) and that were performed by me.
+# Searches were developed as based on research carried out by others (referenced where applicable) and my own research.
 # Created by J Marasinghe
 
 win_usrprofile_tagger:
