@@ -494,3 +494,10 @@ win_powershell_empire:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1071.001 or T1059.001-PowerShell Empire Indicator'
+
+win_pth_post_shell:
+  query_string:  'parser:winevtx AND event_identifier:4674 AND xml_string:"*ObjectName\">*ConDrv*"'
+  tags: ['win','Lateral Movement','Pass the Hash','T1550','T1550.002']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1550.002-PtH Post Activity Indicator'
