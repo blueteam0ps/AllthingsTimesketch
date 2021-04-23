@@ -501,3 +501,10 @@ win_pth_post_shell:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1550.002-PtH Post Activity Indicator'
+
+win_winrm_activity:
+  query_string:  'parser:winevtx AND (event_identifier:4688 OR event_identifier:1) AND message:*wsmprovhost.exe*'
+  tags: ['win','Lateral Movement','PowerShell Remoting','T1021.006','T1021']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.006-Powershell Remoting Activity Indicator'
