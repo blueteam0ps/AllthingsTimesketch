@@ -1,5 +1,5 @@
 #!/bin/bash
-# Description: This helper bash script to bring up Timesketch and Plaso dockerised versions for rapid deployment.
+# Description: This helper script will bring up Timesketch and Plaso dockerised versions for rapid deployment.
 # Tested on Ubuntu 20.04 LTS Server
 # By J Marasinghe
 
