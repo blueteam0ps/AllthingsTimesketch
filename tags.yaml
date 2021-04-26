@@ -101,7 +101,7 @@ win_postexploit_framework_tagger:
   view_name: 'T1219-Post Exploitation Tool Detection'
 
 win_execution_indicator_tagger:
-  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR (parser:winreg AND key_path:"*Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\*" AND (message:"*\.exe" OR message:"*\.lnk")) OR parser:"prefetch" OR parser:"appcompatcache" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR parser:bam OR (parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
+  query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR parser:"prefetch" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR #(parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
   tags: ['win-execution','T1204','Execution','User-Execution']
   emojis: ['MARK']
   create_view: true
@@ -202,7 +202,7 @@ win_ssh_exfil_lm_tagger:
   view_name: 'T1579-Lateral Movement or Exfiltration via SSH'
 
 win_sus_windowsuseractivity_tagger:
-  query_string:  'parser:winevtx AND (event_identifier:4720 OR event_identifier:4722 OR event_identifier:4724 OR event_identifier:4728 OR event_identifier:4634 OR event_identifier:4672 OR event_identifier:4733)'
+  query_string:  'parser:winevtx AND (event_identifier:4722 OR event_identifier:4724 OR event_identifier:4728 OR event_identifier:4634 OR event_identifier:4672 OR event_identifier:4733)'
   tags: ['win-user-acc','Persistence','T1078','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
@@ -508,3 +508,32 @@ win_winrm_activity:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.006-Powershell Remoting Activity Indicator'
+
+win_local_acc_creation:
+  query_string:  'parser:winevtx AND event_identifier:4720'
+  tags: ['win','Persistence','T1136.001','T1136']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1136.001-Local Account Created'
+ 
+win_shimcache_activity:
+  query_string:  'parser:appcompatcache AND (path:*exe* | path:*cpl* | path:*ps1* | path:*msi* | path:*dll* | path:*bat*)'
+  tags: ['win-execution','T1204','Execution','Existence']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1204-Execution or Existence of a File'
+ 
+win_bam_activity:
+  query_string:  'parser:bam AND binary_path:*exe'
+  tags: ['win-execution','T1204','Execution','User-Execution','BAM']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1204-Execution of a Binary'
+ 
+win_userassist_activity:
+  query_string:  'parser:userassist AND (value_name:*lnk* | value_name:*exe*)'
+  tags: ['win-execution','T1204','Execution','User-Execution','User Assist']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1204-User Execution or Shortcut'
+  
