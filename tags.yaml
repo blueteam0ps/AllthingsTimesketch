@@ -538,7 +538,7 @@ win_userassist_activity:
 
 win_schtask_created:
   query_string:  'parser:winevtx AND event_identifier:4698'
-  tags: ['win','T1053.005','Execution','Persistence','Privilege-Escalation']
+  tags: ['win','T1053.005','Execution','Persistence','Privilege-Escalation','T1053']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1053.005-Scheduled Task Creation'
@@ -559,7 +559,21 @@ win_schtask_modified:
   
 win_winrs_activity:
   query_string:  'parser:winevtx AND strings:*WinRsHost.exe*'
-  tags: ['win','T1021.006','Lateral-Movement','WinRM']
+  tags: ['win','T1021.006','Lateral-Movement','WinRM','T1021']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.006-WinRS activity'
+  
+win_compressed_files:
+  query_string:  'parser:filestat AND (filename:*.zip | filename:*.7z | filename:*.rar | filename:*.tar | filename:*.gz | filename:*.tar.gz)'
+  tags: ['win','T1560.001','Collection','T1560']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1560.001-Compressed Files'
+
+win_potential_lsass_dmps:
+  query_string:  'parser:filestat AND file_entry_type:file AND filename:"*\.dmp" AND ((filename:*temp* | filename:*tmp* | filename:*\Windows*) OR filename:*lsass*)'
+  tags: ['win','T1003.001','Credential-Access','LSASS','T1003']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1003.001-Potential LSASS Dumps'
