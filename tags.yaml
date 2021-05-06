@@ -536,4 +536,31 @@ win_userassist_activity:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1204-User Execution or Shortcut'
+
+win_schtask_created:
+  query_string:  'parser:winevtx AND event_identifier:4698'
+  tags: ['win','T1053.005','Execution','Persistence','Privilege-Escalation']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1053.005-Scheduled Task Creation'
+ 
+win_schtask_deleted:
+  query_string:  'parser:winevtx AND event_identifier:4699'
+  tags: ['win','T1070','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1070-Scheduled Task Deleted'
+ 
+win_schtask_modified:
+  query_string:  'parser:winevtx AND event_identifier:4702 AND NOT strings:"*<Command>%systemroot%\\system32\\usoclient.exe</Command>*" AND NOT (strings:"*<Command>C:\\Windows\\system32\\sc.exe</Command>*" AND strings:"*start wuauserv*")'
+  tags: ['win','T1070','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1070-Scheduled Task Deleted'
   
+win_winrs_activity:
+  query_string:  'parser:winevtx AND strings:*WinRsHost.exe*'
+  tags: ['win','T1021.006','Lateral-Movement','WinRM']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.006-WinRS activity'
