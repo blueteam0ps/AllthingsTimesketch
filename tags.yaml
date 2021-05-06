@@ -2,154 +2,154 @@
 # Searches were developed as based on research carried out by others (referenced where applicable) and my own research.
 # Created by J Marasinghe
 
-win_usrprofile_tagger:
+win_usrprofile:
   query_string: 'parser:"winreg/winreg_default" AND key_path:*ProfileList*'
   tags: ['win-user-profiles']
   emojis: ['MARK']
   create_view: true
   view_name: 'Windows User Profiles'
 
-win_powershell_mimikatz_tagger:
+win_powershell_mimikatz:
   query_string:  'parser:winevtx AND source_name:*powershell* AND (message:*System\.Reflection\.AssemblyName* OR message:*System\.Reflection\.Emit\.AssemblyBuilderAccess* OR message:*System\.Runtime\.InteropServices\.MarshalAsAttribute* OR message:*TOKEN_PRIVILEGES* OR message:*SE_PRIVILEGE_ENABLED*)'
   tags: ['win-mimikatz','T1003','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1003.001-Mimikatz Execution via PowerShell'
 
-win_disable_defender_tagger:
+win_disable_defender:
   query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:5001 OR event_identifier:5010 OR event_identifier:5012)'
   tags: ['win-defender','T1562','Defense Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Win Defender Disabled'
 
-win_service_installation_execution_tagger:
+win_service_installation_execution:
   query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message:"*svchost.exe -k print*"'
   tags: ['win-service','T1543','T1569','Persistence']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1543-Installation or Execution of a Windows Service'
 
-win_firewall_activity_tagger:
+win_firewall_activity:
   query_string:  '(parser:"winreg" AND key_path:"*FirewallRules*") OR (parser:winevtx AND source_name:"Microsoft-Windows-Windows Firewall With Advanced Security" AND event_identifier:2005)'
   tags: ['win-firewall','T1562','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.004-Windows Firewall Rules'
 
-win_rdp_activity_tagger:
+win_rdp_activity:
   query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") AND NOT parser:"winreg*"'
   tags: ['win-rdp','T1021','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.001-RDP Activity'
 
-win_UAC_disabled_tagger:
+win_UAC_disabled:
   query_string:  'parser:winreg AND key_path:"*Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA" AND message:"*DisplayType: [REG_DWORD_LE] 0*"'
   tags: ['win-uac','T1548','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1548.002-UAC Disabled in registry'
 
-win_sticky_key_tagger:
+win_sticky_key:
   query_string:  'parser:winreg AND key_path:"*SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options*" AND message:*Debugger*'
   tags: ['win-sticky','T1183','Persistence']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1183-Image File Execution Options Injection'
 
-win_sus_powershell__tagger:
+win_sus_powershell:
   query_string:  'parser:winevtx AND source_name:*powershell* AND message:(\/\.\*\\\-w\.\*h\.\*\/ \/\.\*\\\-NoP\.\*\/ \/\.\*\\\-noni\.\*\/ \/\.\*\\\-ec\.\*\/ \/\.\*\\\-en\.\*\/)'
   tags: ['win-powershell','T1059','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-Suspicious PowerShell Commands'
 
-win_sus_bitsjobs_tagger:
+win_sus_bitsjobs:
   query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-Bits-Client") AND (event_identifier:59 AND (strings:"*\.ps1*" OR strings:"*\.bat*" OR strings:"*\.exe*" OR strings:"*\.dll*" OR strings:"*\.zip*" OR strings:"*\.rar*" OR strings:"*\.7z*"))'
   tags: ['win-bitstransfer','T1197','Persistence']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1197-Suspicious BitsTransfer Activity'
 
-win_sus_logon_failure_tagger:
+win_sus_logon_failure:
   query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND (event_identifier:4625 OR event_identifier:4767 OR event_identifier:4740 OR event_identifier:4776)'
   tags: ['win-logonfailures','T1110','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1110-Suspicious Logon Failures'
 
-win_dc_sync_tagger:
+win_dc_sync:
   query_string:  'parser:winevtx AND event_identifier:5136 AND message:*ntsecuritydescriptor* AND (message:"*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*" OR message:"*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*" OR message:"*89e95b76-444d-4c62-991a-0facbeda640c*")'
   tags: ['win-dcsync','T1003.006','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1003.006-DCSync'
 
-win_bloodhound_tagger:
+win_bloodhound:
   query_string:  'data_type:"windows:evtx:record" AND (message:"*Invoke-Bloodhound*" OR message:"*Get-BloodHoundData*" OR message:"*.exe -c All -d*" OR message:"*CollectionMethod All*" OR message:"*DCOnly*" OR message:*SharpHound*)'
   tags: ['win-bloodhound','T1482','Discovery']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1482-BloodHound Behaviour Detected'
 
-win_postexploit_framework_tagger:
+win_postexploit_framework:
   query_string:  'message:*MeteTool* OR message:*MPreter* OR message:*Meterpreter* OR message:*Metasploit* OR message:*PowerSploit* OR message:*CobaltSrike* OR message:*Swrort* OR message:*Rozena* OR message:*Backdoor.Cobalt*'
   tags: ['win-postexploit','T1219','Command-and-Control']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1219-Post Exploitation Tool Detection'
 
-win_execution_indicator_tagger:
+win_execution_indicator:
   query_string:  '(parser:winreg AND (key_path:"*Microsoft\\Windows\\ShellNoRoam\\MUICache*" OR key_path:"*Software\\Microsoft\\Windows\\Shell\\MUICache*")) OR parser:"prefetch" OR (parser:"winevtx" AND event_identifier:4688) OR (parser:winreg AND key_path:"*LastVisitedPidlMRU*") OR (parser:winreg AND key_path:"*LastVisitedMRU*") OR #(parser:winevtx AND source_name:"Microsoft-Windows-Application-Experience" AND event_identifier:500)'
   tags: ['win-execution','T1204','Execution','User-Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1204-Execution'
 
-win_cred_dumper_tagger:
+win_cred_dumper:
   query_string:  'parser:winevtx AND (message:*DumpCreds* OR message:*PWCrack* OR message:*HTool* OR message:*PSWtool* OR message:*PWDump* OR message:*PShlSpy* OR message:*SecurityTool*)'
   tags: ['win-credump','T1003','Credential-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1003-Credential Dumper'
 
-win_powershell_web_tagger:
+win_powershell_web:
   query_string:  'parser:winevtx AND (event_identifier:4104 OR event_identifier:4688) AND (message:*Invoke-WebRequest* OR message:*iwr* OR message:*wget* OR message:*curl* OR message:*Net.WebClient* OR message:*Start-BitsTransfer*)'
   tags: ['win-credump','T1059.001','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059-PowerShell Web Request'
 
-win_wireless_activity_tagger:
+win_wireless_activity:
   query_string:  'parser:winevtx AND source_name:*WLAN* AND (event_identifier:8001 OR event_identifier:8003 OR event_identifier:8005 OR event_identifier:8006 OR event_identifier:8008 OR event_identifier:20019 OR event_identifier:20020)'
   tags: ['win-wireless','T1200','Wireless']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1200-Wireless Activity'
 
-win_bluekeep_scan_tagger:
+win_bluekeep_scan:
   query_string:  'parser:winevtx AND event_identifier:4625 AND message:*AAAAAAA*'
   tags: ['win-bluekeep','T1595','Bluekeep','Scan']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1595-Bluekeep Scanning'
 
-win_reg_seclog_disabled_tagger:
+win_reg_seclog_disabled:
   query_string:  'parser:winreg AND key_path:"*\\Control\\MiniNt*"'
   tags: ['win-regseclogdis','T1562.002','Defense-Evasion','Security Log Disabled']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.002-Windows Security Log Disabled via MiniNt'
 
-win_smbexec_tagger:
+win_smbexec:
   query_string:  'parser:winevtx AND event_identifier:7045 AND (message:*BTOBTO* OR message:*execute.bat*)'
   tags: ['win-smbexec','T1021.002','Impacket','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.002-Remote execution of SMBExec'
 
-win_macroenableddoc__tagger:
+win_macroenableddoc:
   query_string:  'parser:winreg AND key_path:"*Trusted Documents\\TrustRecord*"'
   tags: ['win-macro','Execution','T1204.002','Macro-enabled','Execution']
   emojis: ['MARK']
@@ -158,35 +158,35 @@ win_macroenableddoc__tagger:
 
 #source: https://github.com/pmelson/narc/blob/master/scumbots.yara
 
-win_base64encoded_pe_tagger:
+win_base64encoded_pe:
   query_string:  'parser:winevtx AND (message:"*TVqQAAMAAAAEAAAA*" OR message:"*TVpQAAIAAAAEAA8A*" OR message:"*TVoAAAAAAAAAAAAA*" OR message:"*TVpBUlVIieVIgewg*" OR message:"*TVqAAAEAAAAEABAA*" OR message:"*TVroAAAAAFtSRVWJ*" OR message:"*TVqQAAMABAAAAAAA*" OR message:"*TVpBUlVIieVIgewgAAAA*" OR message:"*TVpFUugAAAAAW0iD*" OR message:"*kJCQkE1aQVJVSInlSIHsIAAAA*" OR message:"*kJCQkE1aQVJVSInlSIHsIAAAA*" OR message:"*pcyBwcm9ncm*" OR message:"*lzIHByb2dyY*" OR message:"*aXMgcHJvZ3J*")'
   tags: ['win-base64pe','Execution','T1059.001','Base64','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-Base64 Encoded PE Header'
 
-win_base64doubleencoded_pe_tagger:
+win_base64doubleencoded_pe:
   query_string:  'parser:winevtx AND (message:"*VFZxUUFBTUFBQUFFQUFBQ*" OR message:"*FZwUUFBSUFBQUFFQUE4Q*" OR message:"*VFZvQUFBQUFBQUFBQUFBQ*" OR message:"*VFZwQlVsVklpZVZJZ2V3Z*" OR message:"*VFZxQUFBRUFBQUFFQUJBQ*" OR message:"*VFZyb0FBQUFBRnRTUlZXS*" OR message:"*VFZxUUFBTUFCQUFBQUFBQ*")'
   tags: ['win-base64pe','Execution','T1059.001','Base64','Double-Encoded','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-Base64 Double Encoded PE Header'
 
-win_base64doubleencoded_null_padding_pe_tagger:
+win_base64doubleencoded_null_padding_pe:
   query_string:  'parser:winevtx AND (message:"*VABWAHEAUQBBAEEATQBBAEEAQQBBAEUAQQBBAEEAQQ*" OR message:"*VABWAHAAUQBBAEEASQBBAEEAQQBBAEUAQQBBADgAQQ*" OR message:"*VABWAG8AQQBBAEEAQQBBAEEAQQBBAEEAQQBBAEEAQQ*" OR message:"*VABWAHAAQgBVAGwAVgBJAGkAZQBWAEkAZwBlAHcAZw*" OR message:"*VABWAHEAQQBBAEEARQBBAEEAQQBBAEUAQQBCAEEAQQ*" OR message:"*VABWAHIAbwBBAEEAQQBBAEEARgB0AFMAUgBWAFcASg*" OR message:"*VABWAHEAUQBBAEEATQBBAEIAQQBBAEEAQQBBAEEAQQ*" OR message:"*VABWAHAAQgBVAGwAVgBJAGkAZQBWAEkAZwBlAHcAZwBBAEEAQQ*" OR message:"*awBKAEMAUQBrAEUAMQBhAFEAVgBKAFYAUwBJAG4AbABTAEkASABzAEkAQQBBAEEAQQ*")'
   tags: ['win-base64pe','Execution','T1059.001','Base64','Double-Encoded-Null-Padding','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-Base64 Double Encoded with null padding PE Header'
 
-win_base64encoded_python_tagger:
+win_base64encoded_python:
   query_string:  'parser:winevtx AND (message:"*IyEvYmluL2Jhc2*" OR message:"*IyEvYmluL3No*" OR message:"*L2Jpbi9iYXNo*" OR message:"*L2Jpbi9za*" OR message:"*IyEgL3Vzci9iaW4vZW52IHB5dGhvb*" OR message:"*IyEvdXNyL2Jpbi9lbnYgcHl0aG9*" OR message:"*IyEvdXNyL2Jpbi9weXRob2*")'
   tags: ['win-base64python','Execution','T1059','Base64','Encoded-Python','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059-Base64 Encoded Python'
 
-win_base64encoded_gzipPE_tagger:
+win_base64encoded_gzipPE:
   query_string:  'parser:winevtx AND (message:"*7b0HYBxJliUmL2*" OR message:"*cG93ZXJzaGVsbC*" OR message:"*UG93ZXJTaGVsbC*" OR message:"*tL0HfFzFET/+7t*" OR message:"*7XwJdFxXkWi9pd*" OR message:"*7XsLdBzVleCtqu*" OR message:"*7b15fBzFsTheM7*")'
   tags: ['win-base64gzippe','Execution','T1059','Base64','Encoded-Gzip','Execution']
   emojis: ['MARK']
@@ -194,57 +194,56 @@ win_base64encoded_gzipPE_tagger:
   view_name: 'T1059-Base64 Encoded Gzip'
 
 #source:http://az4n6.blogspot.com/2020/02/detecting-laterial-movment-with-winscp.html
-win_ssh_exfil_lm_tagger:
+win_ssh_exfil_lm:
   query_string:  'parser:winevtx AND (event_identifier:4624 AND xml_string:"*LogonType\">5*" AND xml_string:"TargetUserName\">sshd*" AND xml_string:"TargetDomainName\">VIRTUAL*")'
   tags: ['win-ssh-lateral','Lateral-Movement','T1048.002','Exfiltration','T1021.004']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1579-Lateral Movement or Exfiltration via SSH'
 
-win_sus_windowsuseractivity_tagger:
+win_sus_windowsuseractivity:
   query_string:  'parser:winevtx AND (event_identifier:4722 OR event_identifier:4724 OR event_identifier:4728 OR event_identifier:4634 OR event_identifier:4672 OR event_identifier:4733)'
   tags: ['win-user-acc','Persistence','T1078','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078-Windows Account Activity'
 
-win_eventlog_svc_stopped_tagger:
+win_eventlog_svc_disabled:
   query_string:  'parser:winevtx AND event_identifier:7040 AND strings:"*Windows Event Log*" AND strings:"*disabled*"'
   tags: ['win-evt-log','Defense-Evasion','T1562.002','Event Log Disabled']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.002-Event Log Service Disabled'
 
-win_applocker_denied_events_tagger:
+win_applocker_denied_events:
   query_string:  'parser:winevtx AND source_name:*AppLocker* AND (event_identifier:8003 OR event_identifier:8004 OR event_identifier:8006 OR event_identifier:8007)'
   tags: ['Execution','T1059.003','AppLocker-denied']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.003-AppLocker Denied Events'
 
-win_applocker_allowed_events_tagger:
+win_applocker_allowed_events:
   query_string:  'parser:winevtx AND source_name:*AppLocker* AND (event_identifier:8002 OR event_identifier:8005)'
   tags: ['Execution','T1059.003','AppLocker-allowed']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.003-AppLocker Allowed Events'
 
-win_applocker_disabled__tagger:
+win_applocker_disabled:
   query_string:  'parser:winevtx AND source_name:*AppLocker* AND event_identifier:8008'
   tags: ['T1562','Defense-Evasion','','AppLocker-Disabled']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562-AppLocker Disabled'
 
-
-win_eventlog_clear_tagger:
+win_eventlog_clear:
   query_string:  'parser:winevtx AND source_name:"Windows-Security-Auditing" AND event_identifier:1102'
   tags: ['win-evt-log','Defense-Evasion','T1070.001','Log-Clear']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1070.001-Windows Log Cleared'
 
-win_autoruns_tagger:
+win_autoruns:
   query_string:  'parser:windows_run AND (message:*exe* OR message:*.dll* OR message:*.bat* OR message:*.ps1*)'
   tags: ['win-autorun','Persistence','T1547.001']
   emojis: ['MARK']
@@ -253,49 +252,49 @@ win_autoruns_tagger:
 
 #source:https://gist.github.com/pe3zx/7c5e0080c3b0869ccba1f1dc2ea0c5e0
 
-win_defender_disabledreg_tagger:
+win_defender_disabledreg:
   query_string:  'parser:winreg AND key_path:"*Microsoft\\Windows Defender*" AND (values:"*DisableRealtimeMonitoring: \[REG_DWORD_LE\] 1*" OR values:"*DisableAntiSpyware: \[REG_DWORD_LE\] 1*" OR values:"*DisableAntiVirus: \[REG_DWORD_LE\] 1*" OR values:"*DisableBehaviorMonitoring: \[REG_DWORD_LE\] 1*" OR values:"*DisableIOAVProtection: \[REG_DWORD_LE\] 1*" OR values:"*DisableOnAccessProtection: \[REG_DWORD_LE\] 1*" OR values:"*DisableScanOnRealtimeEnable: \[REG_DWORD_LE\] 1*" OR values:"*DisableEnhancedNotifications: \[REG_DWORD_LE\] 1*" OR values:"*DisableBlockAtFirstSeen: \[REG_DWORD_LE\] 1*")'
   tags: ['win-defender','Defense-Evasion','T1562.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Disabled Registry Key'
 
-win_defender_disabledreporting_tagger:
+win_defender_disabledreporting:
   query_string:  'parser:winreg AND key_path:"*Microsoft\\Windows Defender*" AND (message:"*SpyNetReporting: \[REG_DWORD_LE\] 0*" OR message:"*SubmitSamplesConsent: \[REG_DWORD_LE\] 0*" OR message:"*MpEnablePus: \[REG_DWORD_LE\] 0*")'
   tags: ['win-defender','Defense-Evasion','T1562.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Reporting Disabled'
 
-win_defender_disablelog_tagger:
+win_defender_disablelog:
   query_string:  'parser:winreg AND (key_path:"*DefenderApiLogger*" OR key_path:"*DefenderAuditLogger*") AND values:"*Start: \[REG_DWORD_LE\] 0*"'
   tags: ['win-defender','Defense-Evasion','T1562.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Logging Disabled'
 
-win_defender_disableservices_tagger:
+win_defender_disableservices:
   query_string:  'parser:winreg AND (key_path:"*WdBoot*" OR key_path:"*WdFilter*" OR key_path:"*WdNisDrv*" OR key_path:"*WdNisSvc*" OR key_path:"*WinDefend*" OR key_path:"*SecurityHealthService*" ) AND values:"*Start*" AND values:"*\[REG_DWORD_LE\] 4*"'
   tags: ['win-defender','Defense-Evasion','T1562.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Services Disabled'
 
-win_defender_disableps_tagger:
+win_defender_disableps:
   query_string:  'parser:winevtx AND message:"*Set-MpPreference*" AND (message:"*Disable*" OR message:"*Reporting*" OR message:"*SubmitSamplesConsent*" OR message:"*DefaultAction*")'
   tags: ['win-defender','Defense-Evasion','T1562.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.001-Windows Defender Disabled via PS'
 
-win_appcertdll_tagger:
+win_appcertdll:
   query_string:  'parser:winreg AND key_path:"*Control\\Session Manager*" AND values:*AppCertDlls*'
   tags: ['appcertdlls','Persistence','T1546.009']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1546.009-AppCertDlls'
 
-win_appinitdll_tagger:
+win_appinitdll:
   query_string:  'parser:winreg AND key_path:"*CurrentVersion\\Windows*" AND values:"*LoadAppInit_DLLs: \[REG_DWORD_LE\] 1*"'
   tags: ['appinitdllloadset','Persistence','T1546.010']
   emojis: ['MARK']
@@ -306,22 +305,22 @@ win_appinitdll_tagger:
 #https://jpcertcc.github.io/ToolAnalysisResultSheet/details/SDB-UAC-Bypass.htm
 #https://pentestlab.blog/2019/12/16/persistence-application-shimming/
 
-win_appshimming_tagger:
+win_appshimming:
   query_string:  '(parser:winreg AND (key_path:"*AppCompatFlags\\InstalledSDB*" OR key_path:"*AppCompatFlags\\Custom*")) OR (parser:prefetch AND executable:*sdbinst.exe*) OR (parser:winreg AND key_path:"*Windows\\CurrentVersion\\Uninstall\*" AND values:*sdbinst\.exe*)'
   tags: ['appshimming','Persistence','T1546.011']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1546.011-Application Shimming Indicator'
 
-win_sysinternals_tagger:
-  query_string:  'parser:winreg AND key_path:"*Software\\Sysinternals\\*" AND values:"*EulaAccepted: \[REG_DWORD_LE\] 1*"'
+win_sysinternals:
+  query_string:  'parser:winreg AND key_path:"*Software\\Sysinternals\\*" AND values:"*EulaAccepted*"'
   tags: ['SysInternals','Software']
   emojis: ['MARK']
   create_view: true
-  view_name: 'Software-SysInternals Usage Indicator'
+  view_name: 'Software-SysInternals Tool Usage Indicator'
 
 #source https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll
-win_netshhelper_tagger:
+win_netshhelper:
   query_string:  'parser:winreg AND key_path:"*Microsoft\\NetSh*" AND (values:"*C:\\*" OR values:"*D:\\*")'
   tags: ['Netsh Helper','Persistence','T1546.007']
   emojis: ['MARK']
@@ -329,28 +328,28 @@ win_netshhelper_tagger:
   view_name: 'T1546.007-Netsh Helper Tampering Indicator'
 
 #source https://pentestlab.blog/2020/02/12/persistence-rid-hijacking/
-win_rid_hijacking_tagger:
+win_rid_hijacking:
   query_string:  'parser:winreg AND source_long:"Registry Key - User Account Information" AND (message:"*RID: 500*" AND NOT message:"*Username: Administrator*")'
   tags: ['RID Hijack','Persistence','T1078.003']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078.003-RID Hijacking Indicator'
 
-win_ps_config_tagger:
+win_ps_config:
   query_string:  'parser:winreg AND key_path:"*Microsoft\\PowerShell*" AND (message:*EnableScript* OR message:*ExecutionPolicy* OR message:*EnableModuleLogging*)'
   tags: ['PowerShell Config','T1059.001']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059.001-PowerShell Configuration'
 
-win_proxyconfig_tagger:
+win_proxyconfig:
   query_string:  'key_path:"HKEY_LOCAL_MACHINE\\Software\\*\\Microsoft\\Windows\\CurrentVersion\\Internet Settings*" AND (values:*AutoDetect* OR values:*ProxyServer* OR values:*ProxyOverride* OR values:*ProxyEnable*)'
   tags: ['Proxy','T1090']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1090-Proxy Config'
 
-win_wmi_wmipersistence_tagger:
+win_wmi_wmipersistence:
   query_string:  'parser:winevtx AND (message:"*commandlinetemplate*" OR message:"*consumer\.CommandLineTemplate*" OR message:*CommandLineEventConsumer* OR message:*Q29tbWFuZExpbmVFdmVudENvbnN1bWVy* OR message:"*Set-WmiInstance*")'
   tags: ['WMI Event Subscription','T1546.003','Persistence']
   emojis: ['MARK']
@@ -358,35 +357,35 @@ win_wmi_wmipersistence_tagger:
   view_name: 'T1546.003-WMI Event Subscription'
 
 #source https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
-win_auditpol_interference_tagger:
+win_auditpol_interference:
   query_string:  'parser:winevtx AND message:*auditpol* AND (message:*disable* OR message:*clear* OR message:*remove* OR message:*restore*)'
   tags: ['Audit Log Impairement','T1562.002','Defense-Evasion']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.002-Window Audit Log Impairement'
 
-win_timezone_tagger:
+win_timezone:
   query_string:  'parser:winreg AND key_path:"*Control\\TimeZoneInformation*"'
   tags: ['Timezone']
   emojis: ['MARK']
   create_view: true
   view_name: 'Timezone'
 
-win_rdp_tunnel_tagger:
+win_rdp_tunnel:
   query_string:  'parser:winevtx AND event_identifier:4624 AND xml_string:"*LogonType\">10*" AND xml_string:"*IpAddress\">127.0.0.1*"'
   tags: ['RDP-Tunnel','T1021.001','Lateral-Movement','Defense-Evasion','T1572']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1572-RDP Tunneling'
 
-win_domain_trust_discovery_tagger:
+win_domain_trust_discovery:
   query_string:  'parser:winevtx AND (event_identifier:4104 OR event_identifier:4688) AND (xml_string:*domainlist* OR xml_string:*trustdmp* OR xml_string:*dcmodes* OR xml_string:*adinfo* OR xml_string:*dclist* OR xml_string:"*computer_pwdnotreqd*" OR xml_string:"*objectcategory=*" OR xml_string:"*-subnets -f*" OR xml_string:"*name=\"Domain Admins\"*" OR xml_string:"*-sc u:*" OR xml_string:"*domainncs*" OR xml_string:"*dompol*" OR xml_string:"*oudmp*" OR xml_string:"*subnetdmp*" OR xml_string:"*gpodmp*" OR xml_string:"*fspdmp*" OR xml_string:"*users_noexpire*" OR xml_string:"*computers_active*" OR xml_string:"*/domain_trusts*" OR xml_string:"*/all_trusts*" OR xml_string:"*/dclist*")'
   tags: ['Domain-Trust','Discovery','T1482','T1018']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1482-Domain Trust Discovery'
 
-win_system_restore_disabled__tagger:
+win_system_restore_disabled:
   query_string:  'parser:winevtx AND event_identifier:8195 AND message:*disabled*'
   tags: ['System-Restore-Disabled','T1490','Impact']
   emojis: ['MARK']
@@ -394,21 +393,21 @@ win_system_restore_disabled__tagger:
   view_name: 'T1490-System Restore Disabled'
 
 #source:https://www.mssqltips.com/sqlservertip/1735/auditing-failed-logins-in-sql-server/
-win_sql_svr_login_success_tagger:
+win_sql_svr_login_success:
   query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND (event_identifier:18453 OR event_identifier:18454)'
   tags: ['SQL','login-success','T1078','Initial-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078-SQL Server Logon Success'
 
-win_sql_svr_login_failure_tagger:
+win_sql_svr_login_failure:
   query_string:  'parser:winevtx AND display_name:"*Logs\\Application\.evtx" AND event_identifier:18456'
   tags: ['SQL','login-fail','T1078','Initial-Access']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1110-SQL Server Failure'
 
-win_cobaltstrike_indicator_1_tagger:
+win_cobaltstrike_indicator_1:
   query_string:  'parser:winevtx AND (event_identifier:4624 OR event_identifier:4625) AND xml_string:"*make_token*"'
   tags: ['authentication','cobaltstrike','T1134','Command-Control']
   emojis: ['MARK']
