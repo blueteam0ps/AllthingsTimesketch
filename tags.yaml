@@ -577,3 +577,17 @@ win_potential_lsass_dmps:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1003.001-Potential LSASS Dumps'
+
+win_wmicommandlineconsumer:
+  query_string:  'tag:Execution AND message:*wmiprvse.exe*'
+  tags: ['win','T1546.003','Persistence','WMI','T1546']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.003-WMI CommandLine Consumer'
+
+win_wmiactivescriptconsumer:
+  query_string:  'tag:Execution AND message:*scrcons.exe*'
+  tags: ['win','T1546.003','Persistence','WMI','T1546']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1546.003-WMI ActiveScript Consumer'
