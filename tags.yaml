@@ -591,3 +591,17 @@ win_wmiactivescriptconsumer:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1546.003-WMI ActiveScript Consumer'
+
+win_csbeaconexec:
+  query_string:  'parser:winevtx AND event_identifier:7045 AND message:"*127.0.0.1\\admin$*" AND message:*exe* AND message:"*LocalSystem*"'
+  tags: ['win','T1569.002','Execution','T1569']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1569.002-Cobalt Strike Beacon Loading'
+  
+win_namedpipeprivesc:
+  query_string:  'parser:winevtx AND (event_identifier:4697 OR event_identifier:7045) AND (message:*COMSPEC* AND message:*echo* AND message:*pipe*)'
+  tags: ['win','T1134.001','Privilege-Escalation','T1134']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1134.001-Named Pipe Impersonation'
