@@ -25,5 +25,8 @@ chmod a+x deployts.sh
 That is it. :)
 
 <b>Tags file for faster triage and aid your analysis</b>
-.Use the following tags file to get most out of TS
+.Use the following tags file to get most out of TS (It is already part of the tsplaso_docker_install.sh script
 https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
+
+<h2>Customised docker-compose file</h2>
+The customised docker-compose file can be used in instances where a separate Dockerised Kibana is required. Further, the ES docker config was updated to have the ES ports exposed to the host. Please ensure the host based firewall is configured to lock down the ports in production environment.
