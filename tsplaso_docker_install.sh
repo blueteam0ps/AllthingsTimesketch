@@ -28,7 +28,12 @@
  chmod 755 deploy_timesketch.sh
  ./deploy_timesketch.sh
  cd /opt/timesketch
+ 
+ # Create a user-defined docker bridge network 
  docker network create tsylink
+ 
+ # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
+ wget -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
  docker-compose up -d
 
  # Download docker version of plaso
@@ -47,6 +52,19 @@
 
  #Restart Timesketch web app docker so that it gets the latest config
  docker restart timesketch_timesketch-web_1
+ 
+ #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
+ cd /opt/
+ git clone https://github.com/blueteam0ps/elasticsearch-plaso-pipelines.git
+ cd elasticsearch-plaso-pipelines/
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-olecf?pretty -d @plaso-olecf.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-evidenceof?pretty -d @plaso-evidenceof.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-geoip?pretty -d @plaso-geoip.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-winevt?pretty -d @plaso-winevt.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ curl -XPUT "http://elasticsearch:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
 
  echo -e "************************************************\n"
  printf "Timesketch User Details\n"
