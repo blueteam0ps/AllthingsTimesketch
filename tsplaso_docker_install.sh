@@ -28,7 +28,7 @@
  chmod 755 deploy_timesketch.sh
  ./deploy_timesketch.sh
  cd /opt/timesketch
- docker network create tsyetilink
+ docker network create tsylink
  docker-compose up -d
 
  # Download docker version of plaso
