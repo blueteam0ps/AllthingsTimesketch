@@ -29,11 +29,12 @@
  ./deploy_timesketch.sh
  cd /opt/timesketch
  
+  # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
+ curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
+ 
  # Create a user-defined docker bridge network 
  docker network create tsylink
- 
- # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
- wget -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
+
  docker-compose up -d
 
  # Download docker version of plaso
@@ -43,7 +44,7 @@
  pip3 install timesketch-import-client
 
   # Download the latest tags file from blueteam0ps repo
-  wget -N https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tags.yaml -O /opt/timesketch/etc/timesketch/tags.yaml
+ wget -N https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tags.yaml -O /opt/timesketch/etc/timesketch/tags.yaml
 
  sudo docker-compose exec timesketch-web tsctl add_user --username $USER1_NAME --password $USER1_PASSWORD
 
@@ -64,7 +65,7 @@
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -XPUT "http://elasticsearch:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
+ curl -XPUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
 
  echo -e "************************************************\n"
  printf "Timesketch User Details\n"
