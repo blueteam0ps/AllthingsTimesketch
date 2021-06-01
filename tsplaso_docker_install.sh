@@ -1,6 +1,6 @@
 #!/bin/bash
-# Description: This helper script will bring up Timesketch and Plaso dockerised versions for rapid deployment.
-# Tested on Ubuntu 20.04 LTS Server
+# Description: This helper script will bring up Timesketch, Kibana (separate) and Plaso dockerised versions for rapid deployment. Further, it will set up InsaneTechnologies elastic pipelines so that relevant embedded fields can be extracted and mapped to fields in ES.
+# Tested on Ubuntu 20.04 LTS Server Edition
 # By J Marasinghe
 
 # Install Docker CE
