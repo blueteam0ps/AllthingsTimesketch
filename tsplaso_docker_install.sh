@@ -1,7 +1,7 @@
 #!/bin/bash
 # Description: This helper script will bring up Timesketch, Kibana (separate) and Plaso dockerised versions for rapid deployment. Further, it will set up InsaneTechnologies elastic pipelines so that relevant embedded fields can be extracted and mapped to fields in ES.
 # Tested on Ubuntu 20.04 LTS Server Edition
-# By J Marasinghe
+# Created by Janantha Marasinghe
 
 # Install Docker CE
  apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
@@ -38,7 +38,11 @@
  docker-compose up -d
 
  # Download docker version of plaso
- docker pull log2timeline/plaso
+ #docker pull log2timeline/plaso
+ 
+ add-apt-repository ppa:gift/stable -y
+ apt-get update
+ apt-get install plaso-tools -y
 
  # Install Timesketch import client to assist with larger plaso uploads
  pip3 install timesketch-import-client
@@ -54,8 +58,11 @@
  #Restart Timesketch web app docker so that it gets the latest config
  docker restart timesketch_timesketch-web_1
  
- #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
  cd /opt/
+ #Downloading the Plaso Filter File 
+ curl -s -O https://raw.githubusercontent.com/log2timeline/plaso/main/data/filter_windows.yaml
+ 
+  #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
  git clone https://github.com/blueteam0ps/elasticsearch-plaso-pipelines.git
  cd elasticsearch-plaso-pipelines/
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-olecf?pretty -d @plaso-olecf.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
