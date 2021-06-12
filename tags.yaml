@@ -605,3 +605,10 @@ win_namedpipeprivesc:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1134.001-Named Pipe Impersonation'
+
+win_gpocreated:
+  query_string:  'parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:5136'
+  tags: ['win','T1484','Privilege-Escalation','Defense-Evasion','T1484']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1484-New GPO Added'
