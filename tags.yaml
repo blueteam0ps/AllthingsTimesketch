@@ -612,3 +612,10 @@ win_gpocreated:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1484-New GPO Added'
+
+win_firewalldisabled:
+  query_string:  'parser:winreg AND (display_name:*SOFTWARE OR display_name:*SYSTEM) AND (message:"*EnableFirewall: [REG_DWORD] 0x00000000*" OR message:"*EnableFirewall: [REG_DWORD_LE] 0*")'
+  tags: ['win','T1562.004','Defense-Evasion','T1562']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.004-Windows Firewall Disabled'
