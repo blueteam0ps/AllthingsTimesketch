@@ -53,7 +53,7 @@
  sudo docker-compose exec timesketch-web tsctl add_user --username $USER1_NAME --password $USER1_PASSWORD
 
  #Increasing the CSRF token time limit
- echo 'WTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
+ echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
 
  #Restart Timesketch web app docker so that it gets the latest config
  docker restart timesketch_timesketch-web_1
