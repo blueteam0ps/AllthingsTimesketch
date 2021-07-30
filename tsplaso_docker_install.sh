@@ -3,6 +3,9 @@
 # Tested on Ubuntu 20.04 LTS Server Edition
 # Created by Janantha Marasinghe
 
+# Update APT database
+sudo apt-get update
+
 # Install Docker CE
  apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
 
