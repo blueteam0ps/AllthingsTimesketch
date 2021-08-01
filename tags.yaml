@@ -632,4 +632,4 @@ win_invisishell:
   tags: ['win','T1574.012','T1574','Defense Evasion','Persistence']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1574.012-Indicator of InvisiShellinvis'
+  view_name: 'T1574.012-Indicator of InvisiShell'
