@@ -1,0 +1,6 @@
+Fast Triage Parsing via Plaso
+------------------------------
+(We are doing this without vss so please make sure you enable it in, depending on your investigation)
+
+log2timeline.py -f /opt/filter_windows.yaml --process_memory_limit 5368709120 --worker_memory_limit 0 --no_vss --parsers "esedb,lnk,olecf,pe,prefetch,recycle_bin,recycle_bin_info2,winevtx,winfirewall,winjob,winreg,custom_destinations" --storage-file yourdb.plaso /your/target
+
