@@ -619,3 +619,17 @@ win_firewalldisabled:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1562.004-Windows Firewall Disabled'
+  
+win_OSVersion:
+  query_string: 'parser:winreg AND data_type:"windows:registry:installation"'
+  tags: ['win-version']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Windows OS Version'
+  
+win_invisishell:
+  query_string: 'parser:winreg AND key_path:"*InProcServer32*" AND key_path:"*cf0d821e-299b-5307-a3d8-b283c03916db*"'
+  tags: ['win','T1574.012','T1574','Defense Evasion','Persistence']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1574.012-Indicator of InvisiShellinvis'
