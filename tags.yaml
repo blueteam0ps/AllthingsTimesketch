@@ -38,7 +38,7 @@ win_firewall_activity:
   view_name: 'T1562.004-Windows Firewall Rules'
 
 win_rdp_activity:
-  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") AND NOT parser:"winreg*"'
+  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND (event_identifier:21 OR event_identifier:22 OR event_identifier:24 OR event_identifier:25 OR event_identifier:39 OR event_identifier:40 OR event_identifier:23 OR event_identifier:1101 OR event_identifier:1103 OR event_identifier:1105 OR event_identifier:1102)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*")'
   tags: ['win-rdp','T1021','Lateral-Movement']
   emojis: ['MARK']
   create_view: true
@@ -633,3 +633,10 @@ win_invisishell:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1574.012-Indicator of InvisiShell'
+ 
+win_netadapter:
+  query_string: 'parser:winreg AND key_path:"*Tcpip/Parameters/Interfaces*" AND NOT message:*empty*'
+  tags: ['win-network','network']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Windows Network Adapter Details'
