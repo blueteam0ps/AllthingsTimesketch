@@ -640,3 +640,10 @@ win_netadapter:
   emojis: ['MARK']
   create_view: true
   view_name: 'Windows Network Adapter Details'
+
+win_archivedfiles:
+  query_string: '(data_type:"windows:lnk:link" OR data_type:"windows:shell_item:file_entry" OR data_type:"olecf:dest_list:entry" OR data_type:"windows:registry:mrulistex") AND (message:*.zip* OR message:*.7z* OR message:*.tar.gz* OR message:*.tar* OR message:*.gz*)'
+  tags: ['win','T1560.001','T1560','Collection']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1560.001-Archived Files'
