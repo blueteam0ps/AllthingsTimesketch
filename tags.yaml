@@ -636,7 +636,7 @@ win_invisishell:
  
 win_netadapter:
   query_string: 'parser:winreg AND key_path:"*Tcpip/Parameters/Interfaces*" AND NOT message:*empty*'
-  tags: ['win-network','network']
+  tags: ['win','network']
   emojis: ['MARK']
   create_view: true
   view_name: 'Windows Network Adapter Details'
@@ -647,3 +647,17 @@ win_archivedfiles:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1560.001-Archived Files'
+  
+win_rdpport:
+  query_string: 'parser:winreg AND key_path:"*Control\\Terminal Server\\WinStations\\RDP-Tcp*" AND message:"*PortNumber*" AND NOT message:"*PortNumber: [REG_DWORD_LE] 3389*"'
+  tags: ['win','Command-and-Control','T1571']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1571-Non Standard RDP Port'
+
+win_hideuserfrmlogon:
+  query_string: 'parser:winreg AND message:"*CurrentVersion\\Winlogon\\SpecialAccounts\\UserList*" AND ((message:"*[REG_DWORD_LE] 0*") OR (message:"*[REG_DWORD_LE] 65536*"))'
+  tags: ['win','Defense Evasion','T1564.002','T1564']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1564.002-User Account Hidden'
