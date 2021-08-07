@@ -480,7 +480,7 @@ win_defender_exclusions:
   view_name: 'T1562.001-Windows Defender Exclusions'
 
 win_msoffice_doc_activity:
-  query_string:  'parser:winreg AND (key_path:"*Security\\Trusted Documents\TrustRecords*" OR key_path:"*Reading Locations*")'
+  query_string:  'parser:winreg AND (key_path:"*Security\\Trusted Documents\TrustRecords*" OR key_path:"*Reading Locations*") AND NOT message:*empty*'
   tags: ['win','Initial-Access','Collection','T1566','T1005','MSOFFICE']
   emojis: ['MARK']
   create_view: true
