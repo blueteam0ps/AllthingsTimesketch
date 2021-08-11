@@ -30,3 +30,12 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
 
 <h2>Customised docker-compose file</h2>
 The customised docker-compose file can be used in instances where a separate Dockerised Kibana is required. Further, the ES docker config was updated to have the ES ports exposed to the host. Please ensure the host based firewall is configured to lock down the ports in production environment.
+
+<h2>Bulk Upload Automated Handling</h2>
+Following shell script can be used on the processing server to automate the following tasks once a zip file gets uploaded.
+This script is based on https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
+1. Validate that the uploaded is a zip file and extracts to a unique directory
+2. Execute Log2timeline workflow on top of the data set
+3. Execute Timesketch workflow taking the newly generated Plaso file
+4. Remove the ZIP and extracted directory 
+https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
