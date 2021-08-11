@@ -68,7 +68,7 @@ process_files () {
 		echo [$(date --utc +'%Y-%m-%d %H:%M:%S') UTC] Removed unzipped triage directory $PROCESSING_DIR/$TIMESTAMPED_NAME Successfully | tee -a $PROCESSING_DIR/$TIMESTAMPED_NAME.log
 	fi
 	#Deleting the triage zip file
-	rm $FILE
+	rm $PROCESSING_DIR/$FILE
 	if [ $? -ne 0 ]; then
 		echo [$(date --utc +'%Y-%m-%d %H:%M:%S') UTC] Failed to remove triage zip file  $PROCESSING_DIR/$TIMESTAMPED_NAME !! | tee -a $PROCESSING_DIR/$TIMESTAMPED_NAME.log
 	exit 1
