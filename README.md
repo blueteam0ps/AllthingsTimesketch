@@ -4,11 +4,11 @@
 This repository contains helper/timesaver scripts/queries related to Timesketch.
 
 <h2>Timesketch and Plaso Auto Install & Configuration Script(Recommended)</h2>
-This script will automatically 
- - gets the latest docker version of Timesketch, Plaso
- - configures Elastic Post processing pipelines (https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines)
- - downloads the latest tagger file from this repo
- - creates the first user account in Timesketch.
+This script will automatically<br/>
+ - gets the latest docker version of Timesketch, Plaso<br/>
+ - configures Elastic Post processing pipelines (https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines)<br/>
+ - downloads the latest tagger file from this repo<br/>
+ - creates the first user account in Timesketch.<br/>
 
 OPTIONAL - Bulk watch & process script be executed on the TS server to watch for incoming triage ZIP files and autorun unzip, l2t and timesketch ingestion tasks. https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
 
