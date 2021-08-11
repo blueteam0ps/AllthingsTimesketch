@@ -2,7 +2,9 @@
 # Automate timeline processing for an input triage zip file with file watcher
 #
 # Usage: chmod a+x ./l2t_ts_watch.sh && ./l2t_ts_watch.sh &
-# Check the respective log file
+# Check the respective log file for status and errors 
+# Change the PROCESSING_DIR to your directory
+# Update your timesketch username and password in line 54
 #
 # Created by Mike Pilkington for use in SANS FOR608
 # Inspired by https://github.com/ReconInfoSec/velociraptor-to-timesketch
