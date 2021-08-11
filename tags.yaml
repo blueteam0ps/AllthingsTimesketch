@@ -116,7 +116,7 @@ win_cred_dumper:
 
 win_powershell_web:
   query_string:  'parser:winevtx AND (event_identifier:4104 OR event_identifier:4688) AND (message:*Invoke-WebRequest* OR message:*iwr* OR message:*wget* OR message:*curl* OR message:*Net.WebClient* OR message:*Start-BitsTransfer*)'
-  tags: ['win-credump','T1059.001','Execution']
+  tags: ['win-powershell-webreq','T1059.001','Execution']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1059-PowerShell Web Request'
