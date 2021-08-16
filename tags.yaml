@@ -682,3 +682,10 @@ win_rdp_activity_started_target:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.001-RDP Activity Started'
+
+win_powershell_datacompress:
+  query_string: 'parser:winevtx AND event_identifier:800 AND message:"*Join-Path*"'
+  tags: ['win-powershell','T1560','Collection']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1560-PowerShell based Compressed Archive Creation'
