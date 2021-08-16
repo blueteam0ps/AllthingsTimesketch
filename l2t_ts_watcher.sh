@@ -18,6 +18,7 @@
 # Pending
 # -Need to add the filter_windows.yaml to l2t parameters
 # -Need to add queue management so that bulk zip exports are handled in batches
+# IMPORTANT! You need inotifywait and unzip packages before you run this script
 
 PROCESSING_DIR="/cases/processor"
 
