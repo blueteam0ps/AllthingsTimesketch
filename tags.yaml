@@ -655,27 +655,6 @@ win_hideuserfrmlogon:
   create_view: true
   view_name: 'T1564.002-User Account Hidden'
   
-win_rdp_activity_started_target:
-  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND ((event_identifier:21 AND NOT xml_string:"*Address>LOCAL*") OR (event_identifier:22 AND NOT xml_string:"*Address>LOCAL*") OR (event_identifier:25 AND NOT xml_string:"*Address>LOCAL*"))) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4778)'
-  tags: ['win-rdp','T1021','Lateral-Movement']
-  emojis: ['MARK']
-  create_view: true
-  view_name: 'T1021.001-RDP Activity Started (Target Host)
-
-win_rdp_activity_ended_target:
-  query_string:  '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND ((event_identifier:24 AND NOT xml_string:"*Address>LOCAL*") OR event_identifier:39 OR event_identifier:40 OR event_identifier:23)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4779)'
-  tags: ['win-rdp','T1021','Lateral-Movement']
-  emojis: ['MARK']
-  create_view: true
-  view_name: 'T1021.001-RDP Activity Ended (Target Host)
-  
-win_rdp_conn_attempt_target:
-  query_string:  'parser:winevtx AND source_name:Microsoft Windows TerminalServices RemoteConnectionManager AND event_id:1149'
-  tags: ['win-rdp','T1021','Lateral-Movement']
-  emojis: ['MARK']
-  create_view: true
-  view_name: 'T1021.001-RDP Connection Attempt (Target Host)
-
 win_rdpport_det2:
   query_string: 'parser:winevtx AND source_name:Microsoft-Windows-RemoteDesktopServices-RdpCoreTS AND event_identifier:129 AND NOT xml_string:"*Port\">3389*"'
   tags: ['win','Command-and-Control','T1571']
@@ -683,3 +662,23 @@ win_rdpport_det2:
   create_view: true
   view_name: 'T1571-Non Standard RDP Port Detection 2'
   
+win_rdp_conn_attempt_target:
+  query_string: 'parser:winevtx AND source_name:Microsoft Windows TerminalServices RemoteConnectionManager AND event_id:1149'
+  tags: ['win-rdp','T1021','Lateral-Movement']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.001-RDP Connection Attempt'
+  
+win_rdp_activity_ended_target:
+  query_string: '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND ((event_identifier:24 AND NOT xml_string:"*Address>LOCAL*") OR event_identifier:39 OR event_identifier:40 OR event_identifier:23)) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4779)'
+  tags: ['win-rdp','T1021','Lateral-Movement','end']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.001-RDP Activity Ended'
+
+win_rdp_activity_started_target:
+  query_string: '(parser:winevtx AND source_name:"Microsoft-Windows-TerminalServices-LocalSessionManager" AND ((event_identifier:21 AND NOT xml_string:"*Address>LOCAL*") OR (event_identifier:22 AND NOT    xml_string:"*Address>LOCAL*") OR (event_identifier:25 AND NOT xml_string:"*Address>LOCAL*"))) OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4624 AND xml_string:"*LogonType\">10*") OR (parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4778)'
+  tags: ['win-rdp','T1021','Lateral-Movement','start']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.001-RDP Activity Started'
