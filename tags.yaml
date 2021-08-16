@@ -24,7 +24,7 @@ win_disable_defender:
   view_name: 'T1562.001-Win Defender Disabled'
 
 win_service_installation_execution:
-  query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message:"*svchost.exe -k print*"'
+  query_string:  'parser:winevtx AND (event_identifier:7045 OR event_identifier:4697) AND NOT message:"*svchost.exe -k*"'
   tags: ['win-service','T1543','T1569','Persistence']
   emojis: ['MARK']
   create_view: true
@@ -306,7 +306,7 @@ win_appinitdll:
 #https://pentestlab.blog/2019/12/16/persistence-application-shimming/
 
 win_appshimming:
-  query_string:  '(parser:winreg AND (key_path:"*AppCompatFlags\\InstalledSDB*" OR key_path:"*AppCompatFlags\\Custom*")) OR (parser:prefetch AND executable:*sdbinst.exe*) OR (parser:winreg AND key_path:"*Windows\\CurrentVersion\\Uninstall\*" AND values:*sdbinst\.exe*)'
+  query_string:  '(parser:winreg AND (key_path:"*AppCompatFlags\\InstalledSDB*" OR key_path:"*AppCompatFlags\\Custom*") AND NOT message:*empty*) OR (parser:prefetch AND executable:*sdbinst.exe*) OR (parser:winreg AND key_path:"*Windows\\CurrentVersion\\Uninstall\*" AND values:*sdbinst\.exe*)'
   tags: ['appshimming','Persistence','T1546.011']
   emojis: ['MARK']
   create_view: true
@@ -527,7 +527,7 @@ win_bam_activity:
   tags: ['win-execution','T1204','Execution','User-Execution','BAM']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1204-Execution of a Binary'
+  view_name: 'T1204-Execution of a Binary via BAM'
  
 win_userassist_activity:
   query_string:  'parser:userassist AND (value_name:*lnk* | value_name:*exe*)'
