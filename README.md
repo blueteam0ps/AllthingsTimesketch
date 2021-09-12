@@ -55,6 +55,7 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 2. Update the "Timesketch CLI Params" with you TS credentials
 3. Update the "Queue Zips" with the amount of ZIPs you would like to process at any given time
 4. Hit Deploy Full!
+5. Node-RED will watch for new files into the /cases/processor folder and it will kick off the flow
 
 ![Node-RED Flow in Action](https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/doco/NR1.png?raw=true)
 
