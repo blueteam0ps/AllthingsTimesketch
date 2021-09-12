@@ -49,7 +49,7 @@ Pre-requisites
 4. You should have Timesketch and Log2timeline pre-installed on the same host as your Node-RED installation. This has been tested using TS and L2T's docker versions.
 
 How to install the workflow?
-1. Download the workflow JSON
+1. Download the workflow JSON and Import it using the Node-RED GUI.
 https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 
 2. Update the "Timesketch CLI Params" with you TS credentials
