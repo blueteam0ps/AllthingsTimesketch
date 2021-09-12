@@ -1,0 +1,560 @@
+[
+    {
+        "id": "545e293e.4e6458",
+        "type": "tab",
+        "label": "Auto Process Triage Zips",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "155f06cb.71a199",
+        "type": "watch-directory",
+        "z": "545e293e.4e6458",
+        "folder": "/cases/processor",
+        "recursive": 0,
+        "typeEvent": "create",
+        "ignoreInitial": true,
+        "ignoredFiles": "",
+        "ignoredFilesType": "re",
+        "name": "Watch for Triage Zips",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "f69259b2.a91318"
+            ]
+        ]
+    },
+    {
+        "id": "21566e0a.0c03d2",
+        "type": "zip",
+        "z": "545e293e.4e6458",
+        "name": "Unzip Action",
+        "mode": "decompress",
+        "filename": "",
+        "compressionlevel": 6,
+        "outasstring": false,
+        "x": 810,
+        "y": 300,
+        "wires": [
+            [
+                "741a29e1.099d18"
+            ]
+        ]
+    },
+    {
+        "id": "1d92453a.2f547b",
+        "type": "file in",
+        "z": "545e293e.4e6458",
+        "name": "Read the Zip",
+        "filename": "",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 610,
+        "y": 300,
+        "wires": [
+            [
+                "21566e0a.0c03d2"
+            ]
+        ]
+    },
+    {
+        "id": "a21786c3.24a7f8",
+        "type": "change",
+        "z": "545e293e.4e6458",
+        "name": "Set the Filename ",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "filename",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 160,
+        "wires": [
+            [
+                "537eb989.cf1338"
+            ]
+        ]
+    },
+    {
+        "id": "741a29e1.099d18",
+        "type": "split",
+        "z": "545e293e.4e6458",
+        "name": "Split Arrays",
+        "splt": "[92,110]",
+        "spltType": "bin",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": true,
+        "addname": "",
+        "x": 990,
+        "y": 300,
+        "wires": [
+            [
+                "ea1c6cf0.a8657"
+            ]
+        ]
+    },
+    {
+        "id": "b3066cae.ad034",
+        "type": "file",
+        "z": "545e293e.4e6458",
+        "name": "Write Uncompressed FIles",
+        "filename": "",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 380,
+        "y": 480,
+        "wires": [
+            [
+                "39a67127.5a2bee"
+            ]
+        ]
+    },
+    {
+        "id": "ea1c6cf0.a8657",
+        "type": "change",
+        "z": "545e293e.4e6458",
+        "name": "Assign filenames and contents",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload.filename",
+                "pt": "msg",
+                "to": "filename",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1230,
+        "y": 300,
+        "wires": [
+            [
+                "e549c6d3.1d6058"
+            ]
+        ]
+    },
+    {
+        "id": "e549c6d3.1d6058",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Set File path",
+        "func": "var newdirname = global.get(\"dirname\");\nmsg.filename = msg.filedir + '/' + newdirname + '/' + msg.filename;\nmsg.unzipdir = msg.filedir + '/' + newdirname;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "b3066cae.ad034"
+            ]
+        ]
+    },
+    {
+        "id": "df05d3ae.8f586",
+        "type": "fs-file-lister",
+        "z": "545e293e.4e6458",
+        "name": "Checks if the file is a ZIP",
+        "start": "/",
+        "pattern": "*.zip",
+        "folders": "*",
+        "hidden": true,
+        "lstype": "files",
+        "path": true,
+        "single": false,
+        "depth": 0,
+        "stat": false,
+        "showWarnings": false,
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "883d9df4.78533"
+            ]
+        ]
+    },
+    {
+        "id": "f69259b2.a91318",
+        "type": "change",
+        "z": "545e293e.4e6458",
+        "name": "Set Proc Directory",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filedir",
+                "pt": "msg",
+                "to": "config.start",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "df05d3ae.8f586"
+            ]
+        ]
+    },
+    {
+        "id": "537eb989.cf1338",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Generate Dir Name",
+        "func": "var filenameUpper = msg.file.split(\".\")[0];\nfilename = filenameUpper.toLowerCase();\nmsg.tstamp = new Date().toISOString().substring(0,19).replace(/-/g,\"\").replace(/:/g,\"\");\ndirnameUpper = filename + msg.tstamp + \"Z\";\nmsg.dirname = dirnameUpper.toLowerCase();\nglobal.set(\"dirname\",msg.dirname);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "24c8cb33.f6d2d4"
+            ]
+        ]
+    },
+    {
+        "id": "24c8cb33.f6d2d4",
+        "type": "fs-ops-mkdir",
+        "z": "545e293e.4e6458",
+        "name": "Create Unzip Dir",
+        "path": "filedir",
+        "pathType": "msg",
+        "dirname": "dirname",
+        "dirnameType": "msg",
+        "recursive": false,
+        "mode": "777",
+        "fullpath": "dirname",
+        "fullpathType": "msg",
+        "x": 380,
+        "y": 300,
+        "wires": [
+            [
+                "1d92453a.2f547b"
+            ]
+        ]
+    },
+    {
+        "id": "39a67127.5a2bee",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "End of Unzip",
+        "property": "parts.index",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "parts.count-1",
+                "vt": "jsonata"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 610,
+        "y": 480,
+        "wires": [
+            [
+                "3fca2583.81cb3a"
+            ]
+        ]
+    },
+    {
+        "id": "3fca2583.81cb3a",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Set-Log2timeline CLI params",
+        "func": "var newdirname = global.get(\"dirname\");\nvar plasodir = \"/cases/plaso/\"\nmsg.tscli = \"--status_view none --worker_memory_limit 0 --parsers \\\"lnk,esedb,olecf,pe,prefetch,recycle_bin,recycle_bin_info2,winevtx,winfirewall,winjob,winreg,custom_destinations,chrome_cache,chrome_preferences,firefox_cache,firefox_cache2,msiecf\\\" --storage-file\" + \" \"+ plasodir + newdirname + \".plaso\" + \" \" + msg.unzipdir;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 480,
+        "wires": [
+            [
+                "598f0e43.5e474"
+            ]
+        ]
+    },
+    {
+        "id": "598f0e43.5e474",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "log2timeline.py",
+        "addpay": "tscli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "Log2timeline Process",
+        "x": 1120,
+        "y": 480,
+        "wires": [
+            [],
+            [],
+            [
+                "91572179.99bca"
+            ]
+        ]
+    },
+    {
+        "id": "91572179.99bca",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Plaso Success",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "dfa2b1ab.2de0e"
+            ]
+        ]
+    },
+    {
+        "id": "2f75f229.1e859e",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "timesketch_importer",
+        "addpay": "tsimport",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "Timesketch Import Process",
+        "x": 1060,
+        "y": 580,
+        "wires": [
+            [],
+            [],
+            [
+                "9d6eccdb.04454"
+            ]
+        ]
+    },
+    {
+        "id": "b1f641f0.257c3",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Timesketch CLI params",
+        "func": "var plasoname = global.get(\"dirname\");\nvar plasofullpath = \"/cases/plaso/\"+ plasoname + \".plaso\";\nmsg.tsimport = \"-u username -p pass --quick --host http://127.0.0.1 --index_name plaso-\" + plasoname + \" --timeline_name \" + plasoname + \"-triage\" + \" --sketch_name \" + plasoname + \"-sketch\" + \" \" + plasofullpath;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 580,
+        "wires": [
+            [
+                "2f75f229.1e859e"
+            ]
+        ]
+    },
+    {
+        "id": "883d9df4.78533",
+        "type": "simple-queue",
+        "z": "545e293e.4e6458",
+        "name": "Queue Zips",
+        "count": "1",
+        "x": 830,
+        "y": 160,
+        "wires": [
+            [
+                "a21786c3.24a7f8"
+            ]
+        ]
+    },
+    {
+        "id": "644493b3.8a91dc",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Timesketch Error Status",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "aa774014.53c1a",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Generates a folder with a unique name per zip (Unzip Destination)",
+        "info": "",
+        "x": 250,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fccdf46f.dcf738",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Update this node with ZIP upload location",
+        "info": "",
+        "x": 180,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "59011b6e.86f384",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Adjust Max Zips to Process limit here",
+        "info": "Tweak the value to configure how many zips to process at any given time",
+        "x": 840,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "262ec069.e07fa",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Change Log2timeline params here",
+        "info": "",
+        "x": 880,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "bf30b26e.de9b2",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Change Timesketch CLI params here",
+        "info": "",
+        "x": 770,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "9d6eccdb.04454",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "CheckTSComplete",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1330,
+        "y": 580,
+        "wires": [
+            [
+                "883d9df4.78533"
+            ],
+            [
+                "644493b3.8a91dc"
+            ]
+        ]
+    },
+    {
+        "id": "dfa2b1ab.2de0e",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "rm -rf ",
+        "addpay": "unzipdir",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "Delete Unzip Dir",
+        "x": 340,
+        "y": 580,
+        "wires": [
+            [],
+            [],
+            [
+                "197239e9.8d04f6"
+            ]
+        ]
+    },
+    {
+        "id": "197239e9.8d04f6",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Delete Folder",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 560,
+        "y": 580,
+        "wires": [
+            [
+                "b1f641f0.257c3"
+            ]
+        ]
+    }
+]
