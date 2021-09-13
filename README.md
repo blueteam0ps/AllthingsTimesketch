@@ -61,7 +61,7 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 
 <h2>Bulk Upload Automated Handling</h2>
 Following shell script can be used on the processing server to automate the following tasks once a zip file gets uploaded.
-This script is based on https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
+This script is inspired by https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
 1. Validate that the uploaded is a zip file and extracts to a unique directory
 2. Execute Log2timeline workflow on top of the data set
 3. Execute Timesketch workflow taking the newly generated Plaso file
