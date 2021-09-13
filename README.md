@@ -10,7 +10,10 @@ This script will automatically<br/>
  - downloads the latest tagger file from this repo<br/>
  - creates the first user account in Timesketch.<br/>
 
-OPTIONAL - Bulk watch & process script be executed on the TS server to watch for incoming triage ZIP files and autorun unzip, l2t and timesketch ingestion tasks. https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
+OPTIONAL - 
+Node-RED based bulk triage processing workflow
+
+Bulk watch & process script be executed on the TS server to watch for incoming triage ZIP files and autorun unzip, l2t and timesketch ingestion tasks. https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
 
 <b>Usage</b>
 Note: You need to be running Ubuntu 20.04 LTS for this.
