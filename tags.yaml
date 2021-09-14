@@ -689,3 +689,10 @@ win_powershell_datacompress:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1560-PowerShell based Compressed Archive Creation'
+
+win_checkblankpassword:
+  query_string: 'parser:winevtx AND event_identifier:4797'
+  tags: ['win','T1078.003','Initial-Access','T1078']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1078.003-Query for a Blank Password for An Account'
