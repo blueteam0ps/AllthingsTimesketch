@@ -32,10 +32,10 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
 The customised docker-compose file can be used in instances where a separate Dockerised Kibana is required. Further, the ES docker config was updated to have the ES ports exposed to the host. Please ensure the host based firewall is configured to lock down the ports in production environment.
 
 <h1> Automating DFIR Triage Processing Workflow</h1>
-My inspiration for the following mini projects were from the work carried by Eric Capuano (AWS DFIR Automation) and knowledge sharing sessions with Mike Pilkington. Bulk triage artefact processing is becoming more frequent.
+My inspiration for the following mini projects were from the work carried by Eric Capuano (AWS DFIR Automation) and knowledge sharing sessions with Mike Pilkington. Special thanks to Sam Machin @https://github.com/sammachin for his continous support with troubleshooting Node-RED workflow issues with me. 
 
 <h2>Node-RED Automation to handle triage processing</h2>
-Node-RED is a browser based flow editor which provides an easier way to achieve automation. I've created an automation flow where the flow will watch for files in /cases/processor directory. When new triage zip files get uploaded (Tested with CyLR) it will automatically unzip into a unique folder, parses it with Log2timeline and ingests into Timesketch using Timesketch Importer. It has the ability to queue up zip files for processing, so you can control how many zips gets processed at any given time. 
+Node-RED is a browser based flow editor which provides an easier way to achieve automation. I've created an automation flow where the flow will watch for ZIP files in /cases/processor directory. When new triage zip files get uploaded (Tested with CyLR zips) it will automatically unzip into a unique folder, parses it with Log2timeline and ingests into Timesketch using Timesketch-Importer script. It has the ability to queue up zip files for processing. This was you can control how many zips gets processed at a point in time. 
 
 Pre-requisites
 ---------------------
