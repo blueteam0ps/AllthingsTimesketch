@@ -51,6 +51,7 @@ NOTICE - I have removed the unzip node from the flow as it had some issues with 
 
 3. You should have /cases/plaso and /cases/processor folders already created. The account you are running Node-RED must have permission on /cases and its sub-folders.
 4. You should have Timesketch and Log2timeline pre-installed on the same host as your Node-RED installation. This has been tested using TS and L2T's docker versions.
+5. You should update the Log2timeline and Timesketch CLI parameters within the flow to meet your requirements.
 
 How to install the workflow?
 1. Download the workflow JSON and Import it using the Node-RED GUI.
@@ -65,7 +66,7 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 
 <h2>Bulk Upload Automated Handling</h2>
 Following shell script can be used on the processing server to automate the following tasks once a zip file gets uploaded.
-This script is inspired by https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
+This script was inspired by https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
 1. Validate that the uploaded is a zip file and extracts to a unique directory
 2. Execute Log2timeline workflow on top of the data set
 3. Execute Timesketch workflow taking the newly generated Plaso file
