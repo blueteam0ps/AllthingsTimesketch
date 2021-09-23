@@ -43,12 +43,11 @@ Pre-requisites
 ---------------------
 1. Install Node-RED using the instructions given at https://nodered.org/docs/getting-started/. I've tested this on Ubuntu 20.04 (https://nodered.org/docs/getting-started/raspberrypi)
 2. This automation depends on the following additonal nodes. I recommend installing it directly via the GUI -> Manage Pallette -> Install after you install Node-RED
-
+NOTICE - I have removed the unzip node from the flow as it had some issues with certain zip files. Latest flows uses the "unzip" utility available for Linux. Therefore, make sure you have it pre-installed before using this flow.
 -node-red-contrib-fs
 -node-red-contrib-fs-ops
 -node-red-contrib-simple-queue
 -node-red-contrib-watchdirectory
--node-red-contrib-zip
 
 3. You should have /cases/plaso and /cases/processor folders already created. The account you are running Node-RED must have permission on /cases and its sub-folders.
 4. You should have Timesketch and Log2timeline pre-installed on the same host as your Node-RED installation. This has been tested using TS and L2T's docker versions.
