@@ -13,8 +13,6 @@ This script will automatically<br/>
 OPTIONAL - 
 Node-RED based bulk triage processing workflow
 
-Bulk watch & process script be executed on the TS server to watch for incoming triage ZIP files and autorun unzip, l2t and timesketch ingestion tasks. https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
-
 <b>Usage</b>
 Note: You need to be running Ubuntu 20.04 LTS for this.
 
