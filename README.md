@@ -3,7 +3,7 @@
 <h1>Purpose</h1>
 This repository contains helper/timesaver scripts/queries related to Timesketch.
 
-<h2>Timesketch and Plaso Auto Install & Configuration Script(Recommended)</h2>
+<h2>Timesketch and Plaso Auto Install & Configuration Script</h2>
 This script will automatically<br/>
  - gets the latest docker version of Timesketch, Plaso<br/>
  - configures Elastic Post processing pipelines (https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines)<br/>
