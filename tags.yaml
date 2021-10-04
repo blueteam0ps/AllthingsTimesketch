@@ -18,7 +18,7 @@ win_powershell_mimikatz:
 
 win_disable_defender:
  query_string:  'parser:"winevtx" AND source_name:"Microsoft-Windows-Windows Defender" AND (event_identifier:"5001" OR event_identifier:"5010" OR event_identifier:"5012")'
- tags: ['win-defender','T1562','Defense Evasion']
+ tags: ['win-defender','T1562','Defense-Evasion']
  emojis: ['MARK']
  create_view: true
  view_name: 'T1562.001-Win Defender Disabled'
@@ -699,3 +699,55 @@ win_checkblankpassword:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1078.003-Query for a Blank Password for An Account'
+
+win_hostname:
+  query_string: 'parser:winreg AND key_path:"*Control\\ComputerName\\ComputerName*"'
+  tags: ['win','Hostname']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Hostname'
+
+win_currentcontrolset:
+  query_string: 'parser:winreg AND key_path:"HKEY_LOCAL_MACHINE\\System\\Select*"'
+  tags: ['win','CurrentControlSet']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'CurrentControlSet'
+
+win_networkinterfaces:
+  query_string: 'parser:winreg AND key_path:"*Parameters\\Interfaces*"'
+  tags: ['win','Network']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Host Network Interfaces'
+
+win_networkshares:
+  query_string: 'parser:winreg AND key_path:"*Lanmanserver\\Shares*" AND NOT message:*empty*'
+  tags: ['win','Network-Share','Shares']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'Network Shares'
+
+#source https://mobile.twitter.com/nas_bench/status/1432781693279248390
+win_telnetapppath:
+  query_string: 'parser:winreg AND key_path:"HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\telnet.exe" AND NOT message:"*(default): [REG_EXPAND_SZ] %SystemRoot%\\system32\\telnet\.exe"'
+  tags: ['win','T1218.011','T1218','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1218.011-TelnetProtocolHandler Abuse'
+
+#source https://www.jpcert.or.jp/english/pub/sr/20170612ac-ir_research_en.pdf
+win_smblatmovementsrc1:
+  query_string: 'parser:winevtx AND source_name:"Microsoft-Windows-Security-Auditing" AND event_identifier:4648 AND xml_string:"*IpPort\">445*"'
+  tags: ['win','T1021.002','T1021','Lateral-Movement','SMB']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.002-Potential SMB Lateral Movement (Source)'
+
+win_schtasks:
+  query_string: 'parser:winreg AND task_name:*'
+  tags: ['win','T1053.005','T1053','Persistence']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1053.005-Scheduled Task'
+
