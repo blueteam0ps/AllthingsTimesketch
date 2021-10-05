@@ -745,9 +745,9 @@ win_smblatmovementsrc1:
   view_name: 'T1021.002-Potential SMB Lateral Movement (Source)'
 
 win_schtasks:
-  query_string: 'parser:winreg AND task_name:*'
+  query_string: 'parser:winreg AND key_path:"*CurrentVersion\\Schedule\\TaskCache\\Tree*" AND NOT key_path:"*CurrentVersion\\Schedule\\TaskCache\\Tree\\Microsoft*" AND NOT message:"*SD: [REG_BINARY] (220 bytes)*"'
   tags: ['win','T1053.005','T1053','Persistence']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1053.005-Scheduled Task'
+  view_name: 'T1053.005-Scheduled Tasks'
 
