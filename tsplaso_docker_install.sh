@@ -78,7 +78,10 @@ sudo apt-get update
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
  curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -XPUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
+ curl -X PUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
+ 
+ #Running Timesketch tagger on large number of timelines can exceed the 500 scroll context limit. This causes errors. A fix was to increase the scroll context count
+ curl -X PUT "http://localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'{ "persistent" : { "search.max_open_scroll_context": 1024}, "transient": {"search.max_open_scroll_context": 1024}}'
 
  echo -e "************************************************\n"
  printf "Timesketch User Details\n"
