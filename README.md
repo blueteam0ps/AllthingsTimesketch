@@ -6,7 +6,6 @@ This repository contains helper/timesaver scripts/queries related to Timesketch.
 <h2>Timesketch and Plaso Auto Install & Configuration Script</h2>
 This script will automatically<br/>
  - gets the latest docker version of Timesketch, Plaso<br/>
- - configures Elastic Post processing pipelines (https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines)<br/>
  - downloads the latest tagger file from this repo<br/>
  - creates the first user account in Timesketch.<br/>
 
@@ -61,6 +60,12 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 5. Node-RED will watch for new files into the /cases/processor folder and it will kick off the flow
 
 ![Node-RED Flow in Action](https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/doco/NR1.png?raw=true)
+
+Planned Improvements
+1. Zip file integrity validation 
+2. Dialog box to enter timesketch auth details so the token can be created at the start
+3. Add flow branching to cater for E01 , Raw and VHDs
+4. Notification of success and failures 
 
 <h2>Bulk Upload Automated Handling</h2>
 Following shell script can be used on the processing server to automate the following tasks once a zip file gets uploaded.
