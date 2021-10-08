@@ -68,17 +68,18 @@ sudo apt-get update
  #Downloading the Plaso Filter File 
  curl -s -O https://raw.githubusercontent.com/log2timeline/plaso/main/data/filter_windows.yaml
  
-  #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
- git clone https://github.com/blueteam0ps/elasticsearch-plaso-pipelines.git
- cd elasticsearch-plaso-pipelines/
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-olecf?pretty -d @plaso-olecf.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-evidenceof?pretty -d @plaso-evidenceof.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-geoip?pretty -d @plaso-geoip.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-winevt?pretty -d @plaso-winevt.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- curl -X PUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
+ ###NOTE - Event drops observed when the pipelines were used so this requires further investigation.
+ #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
+ #git clone https://github.com/blueteam0ps/elasticsearch-plaso-pipelines.git
+ #cd elasticsearch-plaso-pipelines/
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-olecf?pretty -d @plaso-olecf.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-evidenceof?pretty -d @plaso-evidenceof.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-geoip?pretty -d @plaso-geoip.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-winevt?pretty -d @plaso-winevt.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
+ #curl -X PUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
  
  #Running Timesketch tagger on large number of timelines can exceed the 500 scroll context limit. This causes errors. A fix was to increase the scroll context count
  curl -X PUT "http://localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'{ "persistent" : { "search.max_open_scroll_context": 1024}, "transient": {"search.max_open_scroll_context": 1024}}'
