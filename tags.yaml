@@ -751,3 +751,17 @@ win_schtasks:
   create_view: true
   view_name: 'T1053.005-Scheduled Tasks'
 
+#source http://www.hexacorn.com/blog/2018/08/18/lateral-movement-using-wshcontroller-wshremote-objects-iwshcontroller-and-iwshremote-interfaces/
+win_wshremotesource:
+  query_string: 'parser:winreg AND key_path:"*\\Windows Script Host\\Settings*" AND  message:"*Remote: [REG_SZ] 1*"'
+  tags: ['win','T1021','Lateral Movement','source']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021-Windows Script Host Remote Enabled (Source)'
+
+win_wshdestination:
+  query_string: 'parser:"filestat" AND (filename:"*Windows\\Temp\\*" OR filename:wsh*)'
+  tags: ['win','T1021','Lateral Movement','destination']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021-Windows Script Host Remote Activity (Destination)'
