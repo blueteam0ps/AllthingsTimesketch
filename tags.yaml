@@ -505,7 +505,7 @@ win_winrm_activity:
   view_name: 'T1021.006-Powershell Remoting Activity Indicator'
 
 win_local_acc_creation:
-  query_string:  'parser:winevtx AND event_identifier:4720'
+  query_string:  'parser:winevtx AND event_identifier:4720 AND NOT xml_string:"*SubjectUserName\"*$*"'
   tags: ['win','Persistence','T1136.001','T1136']
   emojis: ['MARK']
   create_view: true
