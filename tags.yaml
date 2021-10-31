@@ -765,3 +765,36 @@ win_wshdestination:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021-Windows Script Host Remote Activity (Destination)'
+  
+#source https://twitter.com/VK_Intel/status/1222929998618775553
+#https://enigma0x3.net/2017/03/17/fileless-uac-bypass-using-sdclt-exe/
+win_uacbypass:
+  query_string: 'parser:winreg AND key_path:"*open\\command*" AND (message:"*AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2*" OR message:*isolatedCommand* OR message:*mscfile* OR message:*ms-settings* OR message:*SystemSettings*)'
+  tags: ['win','T1548','T1548.002','Privilege Escalation','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1548.002-UAC Bypass Indicator'
+
+#source https://www.stigviewer.com/stig/windows_10/2019-09-25/finding/V-63841
+win_disablezoneinformation:
+  query_string: 'parser:winreg AND key_path:"*Windows\\CurrentVersion\\Policies\\Attachments" AND values:"*SaveZoneInformation: [REG_DWORD_LE] 1*"'
+  tags: ['win','T1564','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1564-Zone Information Not Recorded'
+
+#source https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.AttachmentManager::AM_CallIOfficeAntiVirus
+win_uacbypass:
+  query_string: 'parser:winreg AND key_path:"*Windows\\CurrentVersion\\Policies\\Attachments" AND values:"*ScanWithAntiVirus: [REG_DWORD_LE] 1*"'
+  tags: ['win','T1562.001','T1562','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1562.001-AV scanning disabled for attachments'
+  
+#source https://jpcertcc.github.io/ToolAnalysisResultSheet/details/mstsc.htm
+win_rdpclient:
+  query_string: 'parser:winreg AND (key_path:"*Microsoft\\Terminal Server Client\\Default*" OR key_path:"*Microsoft\\Terminal Server Client\\Servers*")'
+  tags: ['win','T1021.001','T1021','Lateral-Movement','source']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1021.001-AV scanning disabled for attachments'
