@@ -7,25 +7,6 @@
         "info": ""
     },
     {
-        "id": "155f06cb.71a199",
-        "type": "watch-directory",
-        "z": "545e293e.4e6458",
-        "folder": "/cases/processor",
-        "recursive": 0,
-        "typeEvent": "create",
-        "ignoreInitial": true,
-        "ignoredFiles": "",
-        "ignoredFilesType": "re",
-        "name": "Watch for Triage Zips",
-        "x": 160,
-        "y": 160,
-        "wires": [
-            [
-                "f69259b2.a91318"
-            ]
-        ]
-    },
-    {
         "id": "a21786c3.24a7f8",
         "type": "change",
         "z": "545e293e.4e6458",
@@ -44,34 +25,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1110,
-        "y": 160,
+        "x": 1610,
+        "y": 80,
         "wires": [
             [
                 "537eb989.cf1338"
-            ]
-        ]
-    },
-    {
-        "id": "df05d3ae.8f586",
-        "type": "fs-file-lister",
-        "z": "545e293e.4e6458",
-        "name": "Checks if the file is a ZIP",
-        "start": "/",
-        "pattern": "*.zip",
-        "folders": "*",
-        "hidden": true,
-        "lstype": "files",
-        "path": true,
-        "single": false,
-        "depth": 0,
-        "stat": false,
-        "showWarnings": false,
-        "x": 650,
-        "y": 160,
-        "wires": [
-            [
-                "883d9df4.78533"
             ]
         ]
     },
@@ -98,7 +56,7 @@
         "y": 160,
         "wires": [
             [
-                "df05d3ae.8f586"
+                "9f9ca2673cdf0488"
             ]
         ]
     },
@@ -113,32 +71,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 150,
+        "x": 370,
         "y": 300,
         "wires": [
             [
                 "24c8cb33.f6d2d4"
-            ]
-        ]
-    },
-    {
-        "id": "24c8cb33.f6d2d4",
-        "type": "fs-ops-mkdir",
-        "z": "545e293e.4e6458",
-        "name": "Create Unzip Dir",
-        "path": "filedir",
-        "pathType": "msg",
-        "dirname": "dirname",
-        "dirnameType": "msg",
-        "recursive": false,
-        "mode": "777",
-        "fullpath": "dirname",
-        "fullpathType": "msg",
-        "x": 360,
-        "y": 300,
-        "wires": [
-            [
-                "4739fce93d72c8fa"
             ]
         ]
     },
@@ -203,14 +140,15 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 700,
+        "x": 760,
         "y": 440,
         "wires": [
             [
                 "dfa2b1ab.2de0e"
             ],
             [
-                "9532d0252e634b91"
+                "9532d0252e634b91",
+                "883d9df4.78533"
             ]
         ]
     },
@@ -255,20 +193,6 @@
         ]
     },
     {
-        "id": "883d9df4.78533",
-        "type": "simple-queue",
-        "z": "545e293e.4e6458",
-        "name": "Queue Zips",
-        "count": "2",
-        "x": 870,
-        "y": 160,
-        "wires": [
-            [
-                "a21786c3.24a7f8"
-            ]
-        ]
-    },
-    {
         "id": "644493b3.8a91dc",
         "type": "debug",
         "z": "545e293e.4e6458",
@@ -281,8 +205,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1020,
-        "y": 580,
+        "x": 1060,
+        "y": 640,
         "wires": []
     },
     {
@@ -291,8 +215,8 @@
         "z": "545e293e.4e6458",
         "name": "Generates a folder with a unique name per zip (Unzip Destination)",
         "info": "",
-        "x": 290,
-        "y": 240,
+        "x": 330,
+        "y": 260,
         "wires": []
     },
     {
@@ -309,10 +233,10 @@
         "id": "59011b6e.86f384",
         "type": "comment",
         "z": "545e293e.4e6458",
-        "name": "Adjust Max Zips to Process limit here",
+        "name": "Adjust Max Zips to process at any given point",
         "info": "Tweak the value to configure how many zips to process at any given time",
-        "x": 880,
-        "y": 120,
+        "x": 1430,
+        "y": 40,
         "wires": []
     },
     {
@@ -355,14 +279,15 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 750,
-        "y": 560,
+        "x": 810,
+        "y": 580,
         "wires": [
             [
                 "883d9df4.78533"
             ],
             [
-                "644493b3.8a91dc"
+                "644493b3.8a91dc",
+                "883d9df4.78533"
             ]
         ]
     },
@@ -374,41 +299,17 @@
         "addpay": "unzipdir",
         "append": "",
         "useSpawn": "false",
-        "timer": "",
+        "timer": "300",
+        "winHide": false,
         "oldrc": false,
         "name": "Delete Unzip Dir",
-        "x": 900,
-        "y": 440,
+        "x": 1040,
+        "y": 420,
         "wires": [
             [],
             [],
             [
                 "197239e9.8d04f6"
-            ]
-        ]
-    },
-    {
-        "id": "197239e9.8d04f6",
-        "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "Delete Folder",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 1100,
-        "y": 440,
-        "wires": [
-            [
-                "b1f641f0.257c3"
             ]
         ]
     },
@@ -424,7 +325,7 @@
         "winHide": false,
         "oldrc": false,
         "name": "Unzip Triage Zip",
-        "x": 780,
+        "x": 1120,
         "y": 300,
         "wires": [
             [],
@@ -445,7 +346,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 570,
+        "x": 870,
         "y": 300,
         "wires": [
             [
@@ -473,14 +374,15 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 970,
-        "y": 300,
+        "x": 1370,
+        "y": 320,
         "wires": [
             [
                 "3fca2583.81cb3a"
             ],
             [
-                "bf6968abac0fe524"
+                "bf6968abac0fe524",
+                "883d9df4.78533"
             ]
         ]
     },
@@ -497,8 +399,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1170,
-        "y": 300,
+        "x": 1370,
+        "y": 260,
         "wires": []
     },
     {
@@ -506,7 +408,7 @@
         "type": "comment",
         "z": "545e293e.4e6458",
         "name": "READ ME! Double Click",
-        "info": "**Following folders need to be created beforehand**\n/cases/processors - this is where Zips will be copied to. Note that zip files will be retained.\n/cases/plaso - this is where plaso files be generated\n\nMake sure Node-RED can write to those folders.\n\n**Unzip utility must be present on the Linux host**\nThis flow uses unzip command to decompress zip files. Make sure you have it pre-installed.\n\n**You need the following Node-RED nodes installed via the palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops -node-red-contrib-simple-queue -node-red-contrib-watchdirectory \n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
+        "info": "**Following folders need to be created beforehand**\n/cases/processors - this is where Zips will be copied to. Note that zip files will be retained.\n/cases/plaso - this is where plaso files be generated\n\nMake sure Node-RED can write to those folders.\n\n**Unzip utility must be present on the Linux host**\nThis flow uses unzip command to decompress zip files. Make sure you have it pre-installed.\n\n**You need the following Node-RED nodes installed via the palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops -node-red-contrib-simple-queue -node-red-contrib-watchdirectory \n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
         "x": 160,
         "y": 40,
         "wires": []
@@ -524,8 +426,204 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 870,
-        "y": 500,
+        "x": 830,
+        "y": 360,
         "wires": []
+    },
+    {
+        "id": "155f06cb.71a199",
+        "type": "watch-directory",
+        "z": "545e293e.4e6458",
+        "folder": "/cases/processor",
+        "recursive": 0,
+        "typeEvent": "create",
+        "ignoreInitial": true,
+        "ignoredFiles": "",
+        "ignoredFilesType": "re",
+        "name": "Watch for Triage Zips",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "f69259b2.a91318"
+            ]
+        ]
+    },
+    {
+        "id": "883d9df4.78533",
+        "type": "simple-queue",
+        "z": "545e293e.4e6458",
+        "name": "Queue Zips",
+        "count": "2",
+        "x": 1410,
+        "y": 80,
+        "wires": [
+            [
+                "a21786c3.24a7f8"
+            ]
+        ]
+    },
+    {
+        "id": "24c8cb33.f6d2d4",
+        "type": "fs-ops-mkdir",
+        "z": "545e293e.4e6458",
+        "name": "Create Unzip Dir",
+        "path": "filedir",
+        "pathType": "msg",
+        "dirname": "dirname",
+        "dirnameType": "msg",
+        "recursive": false,
+        "mode": "777",
+        "fullpath": "dirname",
+        "fullpathType": "msg",
+        "x": 640,
+        "y": 300,
+        "wires": [
+            [
+                "4739fce93d72c8fa"
+            ]
+        ]
+    },
+    {
+        "id": "9f9ca2673cdf0488",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Zip File Detection",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": ".*\\.zip",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "448deb2f9d89d4e8"
+            ],
+            [
+                "c1d68e49480668af"
+            ]
+        ]
+    },
+    {
+        "id": "448deb2f9d89d4e8",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "unzip -t",
+        "addpay": "filename",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Zip Integrity Check",
+        "x": 870,
+        "y": 160,
+        "wires": [
+            [],
+            [],
+            [
+                "9572936abb73579f"
+            ]
+        ]
+    },
+    {
+        "id": "c1d68e49480668af",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Unsupported File Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "9572936abb73579f",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Post Zip Integrity Check Action",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1090,
+        "y": 80,
+        "wires": [
+            [
+                "883d9df4.78533"
+            ],
+            [
+                "6942c391b7be7a5e"
+            ]
+        ]
+    },
+    {
+        "id": "6942c391b7be7a5e",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Zip Integrity Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "197239e9.8d04f6",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Delete Folder",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1260,
+        "y": 440,
+        "wires": [
+            [
+                "b1f641f0.257c3"
+            ]
+        ]
     }
 ]
