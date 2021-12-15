@@ -1,7 +1,7 @@
 # AllthingsTimesketch
 
 <h1>Purpose</h1>
-This repository contains helper/timesaver scripts/queries related to Timesketch.
+This repository contains helper/timesaver scripts/queries related to Timesketch. Further it contains a forensic triage workflow developed using NodeRED.
 
 <h2>Timesketch and Plaso Auto Install & Configuration Script</h2>
 This script will automatically<br/>
