@@ -9,8 +9,8 @@
 # Update APT database
 sudo apt-get update
 
-# Install Docker CE
- apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+# Install Docker CE and Archiving Tools
+ apt-get install apt-transport-https ca-certificates curl gnupg lsb-release unzip unrar -y
 
  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   echo \
