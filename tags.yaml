@@ -794,7 +794,7 @@ win_uacbypass:
 #source https://jpcertcc.github.io/ToolAnalysisResultSheet/details/mstsc.htm
 win_rdpclient:
   query_string: 'parser:winreg AND (key_path:"*Microsoft\\Terminal Server Client\\Default*" OR key_path:"*Microsoft\\Terminal Server Client\\Servers*")'
-  tags: ['win','T1021.001','T1021','Lateral-Movement','source']
+  tags: ['win','T1021.001','T1021','Lateral-Movement','source','RDP']
   emojis: ['MARK']
   create_view: true
-  view_name: 'T1021.001-AV scanning disabled for attachments'
+  view_name: 'T1021.001-Remote Services-RDP Targets'
