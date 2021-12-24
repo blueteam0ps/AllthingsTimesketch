@@ -798,3 +798,10 @@ win_rdpclient:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1021.001-Remote Services-RDP Targets'
+  
+win_disablecomputerpassword:
+  query_string: 'parser:winreg AND key_path:"*SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters\\DisablePasswordChange*" AND message:"*DisplayType: [REG_DWORD_LE] 1*"'
+  tags: ['win','T1098','Persistence']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1098-Disable Computer Account Password Change'
