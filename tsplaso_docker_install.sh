@@ -39,7 +39,7 @@ sudo apt-get update
  #curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
  
  # Create a user-defined docker bridge network 
- docker network create tsylink
+ #docker network create tsylink
 
  docker-compose up -d
 
