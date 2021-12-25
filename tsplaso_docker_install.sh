@@ -36,7 +36,7 @@ sudo apt-get update
  cd /opt/timesketch
  
   # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
- curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
+ #curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
  
  # Create a user-defined docker bridge network 
  docker network create tsylink
