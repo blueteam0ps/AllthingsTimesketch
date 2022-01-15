@@ -35,7 +35,7 @@ sudo apt-get update
  ./deploy_timesketch.sh
  cd /opt/timesketch
  
-  # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
+ # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
  #curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
  
  # Create a user-defined docker bridge network 
@@ -62,7 +62,7 @@ sudo apt-get update
  echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
 
  #Restart Timesketch web app docker so that it gets the latest config
- docker restart timesketch_timesketch-web_1
+ docker restart timesketch-web
  
  cd /opt/
  #Downloading the Plaso Filter File 
@@ -81,8 +81,9 @@ sudo apt-get update
  #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
  #curl -X PUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
  
+ #Commenting as I need to test using OpenSearch
  #Running Timesketch tagger on large number of timelines can exceed the 500 scroll context limit. This causes errors. A fix was to increase the scroll context count
- curl -X PUT "http://localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'{ "persistent" : { "search.max_open_scroll_context": 1024}, "transient": {"search.max_open_scroll_context": 1024}}'
+ #curl -X PUT "http://localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'{ "persistent" : { "search.max_open_scroll_context": 1024}, "transient": {"search.max_open_scroll_context": 1024}}'
 
  echo -e "************************************************\n"
  printf "Timesketch User Details\n"
