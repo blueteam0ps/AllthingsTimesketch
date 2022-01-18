@@ -1,40 +1,30 @@
 # AllthingsTimesketch
 
 <h1>Purpose</h1>
-This repository contains helper/timesaver scripts/queries related to Timesketch. Further it contains a forensic triage workflow developed using NodeRED.
+Processing of host triage packages is always a challenge when dealing with incidents involving large number of hosts. 
+This repository contains 
+- a build script to install and configure Timesketch and associated services
+- a workflow built using NodeRED to automate handling of triage packages, plaso processing and ingestion into Timesketch. 
+- a custom Timesketch tagger file which contains a curated list of pre-built queries (mapped to MITRE ATT&CK were possible). It can be used to quickly identify initial pivot points and get contextual information during investigations. 
 
-<h2>Timesketch and Plaso Auto Install & Configuration Script</h2>
-This script will automatically<br/>
- - gets the latest docker version of Timesketch, Plaso<br/>
- - downloads the latest tagger file from this repo<br/>
- - creates the first user account in Timesketch.<br/>
-
-OPTIONAL - 
-Node-RED based bulk triage processing workflow
-
-<b>Usage</b>
+<b>Usage Instructions for Timesketch Install Script</b>
 Note: You need to be running Ubuntu 20.04 LTS for this.
 
 wget https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh
-
 chmod a+x ./tsplaso_docker_install.sh
-
 sudo ./tsplaso_docker_install.sh
 
-<b>Tags file for faster triage</b>
+<b>Tagger file for faster triage</b>
 Use the following tags file to get most out of TS (It is already part of the tsplaso_docker_install.sh script
 https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/tags.yaml
 
-<h2>Customised docker-compose file</h2>
-The customised docker-compose file can be used in instances where a separate Dockerised Kibana is required. Further, the ES docker config was updated to have the ES ports exposed to the host. Please ensure the host based firewall is configured to lock down the ports in production environment.
-
 <h1> Automating DFIR Triage Processing Workflow</h1>
-My inspiration for the following mini projects were from the work carried by Eric Capuano (AWS DFIR Automation) and knowledge sharing sessions with Mike Pilkington. Special thanks to Sam Machin (https://github.com/sammachin) for his continous support with troubleshooting Node-RED workflow issues with me. 
+My inspiration for the following workflow was from the work carried by Eric Capuano (AWS DFIR Automation) and knowledge sharing sessions with Mike Pilkington. Special thanks to Sam Machin (https://github.com/sammachin) for his continous support with troubleshooting Node-RED workflow issues with me. 
 
 <h2>Node-RED Automation to handle triage processing</h2>
-Node-RED is a browser based flow editor which provides an easier way to achieve automation. I've created an automation flow where the flow will watch for ZIP files in /cases/processor directory. When new triage zip files get uploaded (Tested with CyLR zips) it will automatically unzip into a unique folder, parses it with Log2timeline and ingests into Timesketch using Timesketch-Importer script. It has the ability to queue up zip files for processing. This was you can control how many zips gets processed at a point in time. 
+Node-RED is a browser based flow editor which provides an easier way to achieve automation. I've created an automation flow where the flow will watch for ZIP files in /cases/processor directory. When new triage zip files get uploaded (Tested with CyLR and KAPE zips) it will automatically unzip into a unique folder, parses it with Log2timeline and ingests into Timesketch using Timesketch-Importer script. It has the ability to queue up zip files for processing. This was you can control how many zips gets processed at a point in time. 
 
-NOTICE : This workflow currently does not process E01 files. However, I am planning to have that included in the near future
+NOTICE : This workflow currently do not process disk images at this point in time. However, I am planning to have that included in the near future.
 
 Pre-requisites
 ---------------------
@@ -62,16 +52,9 @@ https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/NR_DFIRFlow.json
 ![Node-RED Flow in Action](https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/doco/NR1.png?raw=true)
 
 Planned Improvements
-1. Zip file integrity validation 
+~~1. Zip file integrity validation 
 2. Dialog box to enter timesketch auth details so the token can be created at the start
 3. Add flow branching to cater for E01 , Raw and VHDs
 4. Notification of success and failures 
 
-<h2>Bulk Upload Automated Handling</h2>
-Following shell script can be used on the processing server to automate the following tasks once a zip file gets uploaded.
-This script was inspired by https://github.com/ReconInfoSec/velociraptor-to-timesketch and https://github.com/mpilking/for608-public.
-1. Validate that the uploaded is a zip file and extracts to a unique directory
-2. Execute Log2timeline workflow on top of the data set
-3. Execute Timesketch workflow taking the newly generated Plaso file
-4. Remove the ZIP and extracted directory 
-https://github.com/blueteam0ps/AllthingsTimesketch/blob/master/l2t_ts_watcher.sh
+
