@@ -11,7 +11,9 @@ This repository contains
 Note: You need to be running Ubuntu 20.04 LTS for this.
 
 wget https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh
+
 chmod a+x ./tsplaso_docker_install.sh
+
 sudo ./tsplaso_docker_install.sh
 
 <b>Tagger file for faster triage</b>
