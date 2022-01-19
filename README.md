@@ -4,7 +4,9 @@
 Processing of host triage packages is always a challenge when dealing with incidents involving large number of hosts. 
 This repository contains 
 - a build script to install and configure Timesketch and associated services
-- a workflow built using NodeRED to automate handling of triage packages, plaso processing and ingestion into Timesketch. 
+
+- a workflow built using NodeRED to automate handling of triage packages, plaso processing and ingestion into Timesketch.
+
 - a custom Timesketch tagger file which contains a curated list of pre-built queries (mapped to MITRE ATT&CK were possible). It can be used to quickly identify initial pivot points and get contextual information during investigations. 
 
 <b>Usage Instructions for Timesketch Install Script</b>
