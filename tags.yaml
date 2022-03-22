@@ -340,7 +340,7 @@ win_ps_config:
 
 win_proxyconfig:
   query_string:  'parser:"winreg" AND key_path:"HKEY_LOCAL_MACHINE\\Software\\*\\Microsoft\\Windows\\CurrentVersion\\Internet Settings*" AND (values:*AutoDetect* OR values:*ProxyServer* OR values:*ProxyOverride* OR values:*ProxyEnable*)'
-  tags: ['Proxy','T1090']
+  tags: ['Proxy','T1090','Command-and-Control']
   emojis: ['MARK']
   create_view: true
   view_name: 'T1090-Proxy Config'
@@ -805,3 +805,20 @@ win_disablecomputerpassword:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1098-Disable Computer Account Password Change'
+  
+#source: https://www.dfirnotes.net/portproxy_detection/
+win_ifaceportproxy:
+  query_string: 'parser:winreg and (key_path:"*services\\portproxy\\v4*" or key_path:"*services\\portproxy\\v6*")'
+  tags: ['win','T1090','Command-and-Control','Proxy']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1090-Proxy Setup via Netsh'
+  
+#source: https://unit42.paloaltonetworks.com/unit42-shamoon-2-return-disttrack-wiper/
+win_disableremoteuac:
+  query_string: 'parser:winreg AND key_path:"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\*" AND values:"*LocalAccountTokenFilterPolicy: [REG_DWORD_LE] 1*"'
+  tags: ['win','T1112','Defense-Evasion']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1112-Remote UAC Restrictions Disabled'
+  
