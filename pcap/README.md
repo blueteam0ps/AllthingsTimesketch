@@ -6,7 +6,7 @@ Following scripts can assist you with converting PCAPs to CSV and then get them 
 
 ## Prerequisites 
 PCAP to CSV conversion is carried out using Tshark<br/>
-Pandas Python packages is required<br/>
+Pandas Python package is required<br/>
 
 ## Information
 pip install -r requirements.txt <br/>
