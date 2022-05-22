@@ -821,4 +821,26 @@ win_disableremoteuac:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1112-Remote UAC Restrictions Disabled'
-  
+ 
+#source: https://twitter.com/SBousseaden/status/1523383197513379841
+win_passwordprotectedzip:
+  query_string: 'source_name:Microsoft-Windows-Security-Auditing AND event_identifier:5379 AND xml_string:*ZipFolder*'
+  tags: ['win','T1204','Execution']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1204.002-Password Protected Zip'
+
+#source: https://twitter.com/malmoeb/status/1519710302820089857?s=20&t=vajbYucWJinYLdwkxkmsxA
+win_rdp_tunnelngrok:
+  query_string: 'source_name:Microsoft-Windows-TerminalServices-LocalSessionManager AND event_identifier:21 AND xml_string:*16777216*'
+  tags: ['RDP-Tunnel','ngrok','T1572','Command and Control']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1572-RDP Tunneling via ngrok'
+
+win_accountdisco:
+  query_string: 'event_identifier:4799 AND NOT strings:"C:\\Windows\\System32\\*" AND NOT strings:"C:\\Program Files\\*"'
+  tags: ['T1087','Discovery']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1087-Process associated with Account Discovery'
