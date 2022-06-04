@@ -108,7 +108,7 @@ win_cred_dumper:
   view_name: 'T1003-Credential Dumper'
 
 win_powershell_web:
-  query_string:  'parser:"winevtx" AND (event_identifier:"4104" OR event_identifier:"4688" OR event_identifier:"1") AND (message:"*Invoke-WebRequest*" OR message:"*iwr*" OR message:"*wget*" OR message:"*curl*" OR message:"*Net.WebClient*" OR message:"*Start-BitsTransfer*")'
+  query_string:  'parser:"winevtx" AND (event_identifier:"4104" OR event_identifier:"4688" OR event_identifier:"1" OR event_identifier:"600" OR event_identifier:"4100" OR event_identifier:"400") AND (message:"*Invoke-WebRequest*" OR message:"*iwr*" OR message:"*wget*" OR message:"*curl*" OR message:"*Net.WebClient*" OR message:"*Start-BitsTransfer*")'
   tags: ['win-powershell-webreq','T1059.001','Execution']
   emojis: ['MARK']
   create_view: true
