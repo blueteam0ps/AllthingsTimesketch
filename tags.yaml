@@ -631,7 +631,7 @@ win_invisishell:
   view_name: 'T1574.012-Indicator of InvisiShell'
  
 win_netadapter:
-  query_string: 'parser:"winreg" AND key_path:"*Tcpip/Parameters/Interfaces*" AND NOT message:*empty*'
+  query_string: 'parser:"winreg" AND key_path:"*Tcpip/Parameters/Interfaces*" AND message:*IPAddress*'
   tags: ['win','network']
   emojis: ['MARK']
   create_view: true
