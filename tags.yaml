@@ -831,3 +831,26 @@ win_accountdisco:
   emojis: ['MARK']
   create_view: true
   view_name: 'T1087-Process associated with Account Discovery'
+
+
+#source: https://nasbench.medium.com/finding-forensic-goodness-in-obscure-windows-event-logs-60e978ea45a3
+win_currentrun_start_stop:
+  query_string: 'parser:winevtx AND source_name:"Microsoft-Windows-Shell-Core" AND (event_identifier:9708 OR event_identifier:9707)'
+  tags: ['T1547.001','Persistence','Medium']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1547.001-Current Run Registry Execution Duration'
+
+win_change_proxy_config:
+  query_string: 'parser:winevtx AND source_name:"*WinINet*" event_identifier:5600'
+  tags: ['Proxy','T1090','Command-and-Control','High']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1090-Change of Proxy Configuration'
+
+win_vhd_mounts:
+  query_string: 'parser:winevtx AND source_name:*VHDMP* AND (event_identifier:1 OR event_identifier:2 OR event_identifier:12)'
+  tags: ['T1553.005','Defense-Evasion','Medium']
+  emojis: ['MARK']
+  create_view: true
+  view_name: 'T1553.005-VHD Mounting and Unmounting'
