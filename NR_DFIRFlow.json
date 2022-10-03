@@ -2,96 +2,39 @@
     {
         "id": "545e293e.4e6458",
         "type": "tab",
-        "label": "Auto Process Triage Zips (UNZIP)",
+        "label": "Triage Artefact Processor",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "a21786c3.24a7f8",
-        "type": "change",
-        "z": "545e293e.4e6458",
-        "name": "Set the Filename ",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "filename",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1530,
-        "y": 160,
-        "wires": [
-            [
-                "537eb989.cf1338"
-            ]
-        ]
+        "id": "7411b2bb3895df8d",
+        "type": "tab",
+        "label": "Detect Archive & Integrity Check",
+        "disabled": false,
+        "info": "This workflow identifies different types of archive types and runs integrity checks based on the archiving tool",
+        "env": []
     },
     {
-        "id": "f69259b2.a91318",
-        "type": "change",
-        "z": "545e293e.4e6458",
-        "name": "Set Proc Directory",
-        "rules": [
-            {
-                "t": "set",
-                "p": "filedir",
-                "pt": "msg",
-                "to": "config.start",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 390,
-        "y": 160,
-        "wires": [
-            [
-                "9f9ca2673cdf0488"
-            ]
-        ]
-    },
-    {
-        "id": "537eb989.cf1338",
-        "type": "function",
-        "z": "545e293e.4e6458",
-        "name": "Generate Dir Name",
-        "func": "var filenameUpper = msg.file.split(\".\")[0];\nfilename = filenameUpper.toLowerCase();\nmsg.tstamp = new Date().toISOString().substring(0,19).replace(/-/g,\"\").replace(/:/g,\"\");\ndirnameUpper = filename + msg.tstamp + \"Z\";\nmsg.dirname = dirnameUpper.toLowerCase();\nmsg.plasofname = msg.dirname;\nmsg.filename = msg.payload;\nmsg.unzipdir = msg.filedir + '/' + msg.dirname;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 370,
-        "y": 300,
-        "wires": [
-            [
-                "24c8cb33.f6d2d4"
-            ]
-        ]
+        "id": "494774cbd108cd57",
+        "type": "tab",
+        "label": "Decompress Archive",
+        "disabled": false,
+        "info": "",
+        "env": []
     },
     {
         "id": "3fca2583.81cb3a",
         "type": "function",
         "z": "545e293e.4e6458",
         "name": "Set-Log2timeline CLI params",
-        "func": "var plasodir = \"/cases/plaso/\";\nvar plasoname = msg.dirname.replace('processor', 'plaso');\nmsg.l2tcli = \"--status_view none --parsers \\\"filestat,winiis,lnk,esedb,olecf,pe,prefetch,recycle_bin,recycle_bin_info2,winevtx,winfirewall,winjob,winreg,custom_destinations,chrome_cache,chrome_preferences,firefox_cache,firefox_cache2,msiecf\\\" --storage-file\" + \" \"+ plasoname + \".plaso\" + \" \" + msg.unzipdir;\nreturn msg;",
+        "func": "var plasodir = \"/cases/plaso/\";\nvar plasoname = msg.dirname.replace('processor', 'plaso');\nmsg.l2tcli = \"/:/data log2timeline/plaso:20220428 log2timeline.py --status_view none --parsers \\\"filestat,winiis,lnk,esedb,olecf,pe,prefetch,recycle_bin,recycle_bin_info2,winevtx,winfirewall,winjob,winreg,custom_destinations,chrome_cache,chrome_preferences,firefox_cache,firefox_cache2,msiecf\\\" --storage-file\" + \" \"+ \"/data\" + plasoname + \".plaso\" + \" \" + \"/data\" +msg.unzipdir;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 200,
-        "y": 440,
+        "x": 180,
+        "y": 360,
         "wires": [
             [
                 "598f0e43.5e474"
@@ -102,7 +45,7 @@
         "id": "598f0e43.5e474",
         "type": "exec",
         "z": "545e293e.4e6458",
-        "command": "log2timeline.py",
+        "command": "docker run -v",
         "addpay": "l2tcli",
         "append": "",
         "useSpawn": "false",
@@ -110,13 +53,423 @@
         "winHide": false,
         "oldrc": false,
         "name": "Log2timeline Process",
-        "x": 480,
-        "y": 440,
+        "x": 440,
+        "y": 360,
         "wires": [
             [],
             [],
             [
                 "91572179.99bca"
+            ]
+        ]
+    },
+    {
+        "id": "2f75f229.1e859e",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "timesketch_importer",
+        "addpay": "tsimport",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Timesketch Import Process",
+        "x": 460,
+        "y": 520,
+        "wires": [
+            [],
+            [],
+            [
+                "9d6eccdb.04454"
+            ]
+        ]
+    },
+    {
+        "id": "b1f641f0.257c3",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Timesketch CLI params",
+        "func": "var plasofullpath = \"/cases/plaso/\"+ msg.plasofname + \".plaso\";\nmsg.tsimport = \"-u username -p password --host http://127.0.0.1 --timeline_name \" + msg.plasofname + \"-triage\" + \" --sketch_id \" + \"1\" + \" \" + plasofullpath;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 520,
+        "wires": [
+            [
+                "2f75f229.1e859e"
+            ]
+        ]
+    },
+    {
+        "id": "644493b3.8a91dc",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Timesketch Error",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "fccdf46f.dcf738",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Monitored Directory /cases/processor",
+        "info": "",
+        "x": 170,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "59011b6e.86f384",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Adjust archives to process at any given point",
+        "info": "Tweak the value to configure how many archives to process at any given time",
+        "x": 890,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "262ec069.e07fa",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Change Log2timeline params here",
+        "info": "",
+        "x": 180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "bf30b26e.de9b2",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Change Timesketch CLI params here",
+        "info": "",
+        "x": 190,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "9d6eccdb.04454",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Timesketch Process Result",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 760,
+        "y": 540,
+        "wires": [
+            [
+                "883d9df4.78533"
+            ],
+            [
+                "644493b3.8a91dc",
+                "883d9df4.78533"
+            ]
+        ]
+    },
+    {
+        "id": "dfa2b1ab.2de0e",
+        "type": "exec",
+        "z": "545e293e.4e6458",
+        "command": "rm -rf ",
+        "addpay": "unzipdir",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "300",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Delete Decompressed Dir",
+        "x": 930,
+        "y": 360,
+        "wires": [
+            [],
+            [],
+            [
+                "197239e9.8d04f6"
+            ]
+        ]
+    },
+    {
+        "id": "40bb52206df8872b",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Decompression Status",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 440,
+        "y": 220,
+        "wires": [
+            [
+                "3fca2583.81cb3a"
+            ],
+            [
+                "bf6968abac0fe524",
+                "883d9df4.78533"
+            ]
+        ]
+    },
+    {
+        "id": "bf6968abac0fe524",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Decompress Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "02d7c06bb6ed1c09",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "READ ME! Double Click",
+        "info": "**CURRENT CONFIG OF THE AUTOMATION DO NOT PROCESS NESTED ZIPS OF HOSTS.FOR EXAMPLE, YOU CANNOT UPLOAD A SINGLE ZIP CONTAINING TRIAGE ARCHIVES OF N DIFFERENT HOSTS.**\n\n**Following folders need to be created beforehand**\n/cases/processor - this is where archives will need to be copied to. Note that the original archives copied here will be retained indefinitely.\n/cases/plaso - this is where plaso files be stored after log2timeline completes its processing.\n\nMake sure Node-RED can read and write to all folders under /cases.\n\n**Compression utility must be pre-installed on the Linux host prior running the workflow**\nThis automation is configured to detect Zip, RAR, Tar GZ & BZ2, 7z archives.\n\n** \"Variable Setup\" node** \nThis node contains the key commandline parameters used for archive tools and other variables required for automation.\n\n**You need the following Node-RED nodes installed via the palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops -node-red-contrib-simple-queue -node-red-contrib-watchdirectory \n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
+        "x": 160,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "155f06cb.71a199",
+        "type": "watch-directory",
+        "z": "545e293e.4e6458",
+        "folder": "/cases/processor",
+        "recursive": 0,
+        "typeEvent": "create",
+        "ignoreInitial": true,
+        "ignoredFiles": "",
+        "ignoredFilesType": "re",
+        "name": "Watch for Triage Archives",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "c01857ecd2eb262e"
+            ]
+        ]
+    },
+    {
+        "id": "883d9df4.78533",
+        "type": "simple-queue",
+        "z": "545e293e.4e6458",
+        "name": "Queue Zips",
+        "count": "1",
+        "unique_check": "",
+        "x": 930,
+        "y": 160,
+        "wires": [
+            [
+                "24c8cb33.f6d2d4"
+            ]
+        ]
+    },
+    {
+        "id": "24c8cb33.f6d2d4",
+        "type": "fs-ops-mkdir",
+        "z": "545e293e.4e6458",
+        "name": "Create Unzip Dir",
+        "path": "filedir",
+        "pathType": "msg",
+        "dirname": "dirname",
+        "dirnameType": "msg",
+        "recursive": false,
+        "mode": "777",
+        "fullpath": "dirname",
+        "fullpathType": "msg",
+        "x": 1140,
+        "y": 160,
+        "wires": [
+            [
+                "7c111868273a3fc3"
+            ]
+        ]
+    },
+    {
+        "id": "197239e9.8d04f6",
+        "type": "switch",
+        "z": "545e293e.4e6458",
+        "name": "Delete Folder",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1180,
+        "y": 360,
+        "wires": [
+            [
+                "b1f641f0.257c3"
+            ],
+            [
+                "883d9df4.78533",
+                "6e355990aa202c01"
+            ]
+        ]
+    },
+    {
+        "id": "d0f0410536029177",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "L2T Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6e355990aa202c01",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Folder Deletion Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "70cb269f2529d4cc",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Archive Detection",
+        "mode": "link",
+        "links": [
+            "ece36252fd29037f",
+            "a8d477a02835a411"
+        ],
+        "x": 555,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c3c312389fa2a33b",
+        "type": "link in",
+        "z": "545e293e.4e6458",
+        "name": "Post Integrity Check In",
+        "links": [
+            "20381a751d021a7a"
+        ],
+        "x": 615,
+        "y": 160,
+        "wires": [
+            [
+                "883d9df4.78533"
+            ]
+        ]
+    },
+    {
+        "id": "c01857ecd2eb262e",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Variable Setup",
+        "func": "//Setting up directory path of the file upload\nmsg.config ={}\nmsg.config.start = msg.filedir\n\n//Setting up vars to handle archive decompress operations\nvar filenameUpper = msg.file.split(\".\")[0];\nfilename = filenameUpper.toLowerCase();\nmsg.tstamp = new Date().toISOString().substring(0,19).replace(/-/g,\"\").replace(/:/g,\"\");\ndirnameUpper = filename + msg.tstamp + \"Z\";\nmsg.dirname = dirnameUpper.toLowerCase();\nmsg.plasofname = msg.dirname;\n//msg.filename = msg.payload;\n\n//Setting up decompress parameters\nmsg.unzipdir = msg.filedir + '/' + msg.dirname;\nmsg.unzipcli = \"-qo \" + msg.filename + \" -d \" + msg.unzipdir;\nmsg.sevzipcli = \" x \" + msg.filename + \" -o\" + msg.unzipdir;\nmsg.targzcli = \" xzf \" + msg.filename + \" -C \" + msg.unzipdir;\nmsg.tarbz2cli = \" xjf \" + msg.filename + \" -C \" + msg.unzipdir;\nmsg.unrarcli = \"x \" + msg.filename + \" \" + msg.unzipdir;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "70cb269f2529d4cc"
+            ]
+        ]
+    },
+    {
+        "id": "7c111868273a3fc3",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "ToDecompress",
+        "mode": "link",
+        "links": [
+            "932d7f36e7bf7b3f"
+        ],
+        "x": 1335,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "7d5c86e1dc66ee87",
+        "type": "link in",
+        "z": "545e293e.4e6458",
+        "name": "Decompress Status In",
+        "links": [
+            "472bee379d11d902"
+        ],
+        "x": 235,
+        "y": 220,
+        "wires": [
+            [
+                "40bb52206df8872b"
             ]
         ]
     },
@@ -140,356 +493,23 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 760,
-        "y": 440,
+        "x": 660,
+        "y": 360,
         "wires": [
             [
                 "dfa2b1ab.2de0e"
             ],
             [
-                "9532d0252e634b91",
                 "883d9df4.78533",
                 "d0f0410536029177"
             ]
         ]
     },
     {
-        "id": "2f75f229.1e859e",
-        "type": "exec",
-        "z": "545e293e.4e6458",
-        "command": "timesketch_importer",
-        "addpay": "tsimport",
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "oldrc": false,
-        "name": "Timesketch Import Process",
-        "x": 500,
-        "y": 560,
-        "wires": [
-            [],
-            [],
-            [
-                "9d6eccdb.04454"
-            ]
-        ]
-    },
-    {
-        "id": "b1f641f0.257c3",
-        "type": "function",
-        "z": "545e293e.4e6458",
-        "name": "Timesketch CLI params",
-        "func": "var plasofullpath = \"/cases/plaso/\"+ msg.plasofname + \".plaso\";\nmsg.tsimport = \"-u username -p pass --host http://127.0.0.1 --timeline_name \" + msg.plasofname + \"-triage\" + \" --sketch_id \" + \"1\" + \" \" + plasofullpath;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 190,
-        "y": 560,
-        "wires": [
-            [
-                "2f75f229.1e859e"
-            ]
-        ]
-    },
-    {
-        "id": "644493b3.8a91dc",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "Timesketch Error Status",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1060,
-        "y": 640,
-        "wires": []
-    },
-    {
-        "id": "aa774014.53c1a",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "Generates a folder with a unique name per zip (Unzip Destination)",
-        "info": "",
-        "x": 330,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "fccdf46f.dcf738",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "Update this node with ZIP upload location",
-        "info": "",
-        "x": 260,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "59011b6e.86f384",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "Adjust Max Zips to process at any given point",
-        "info": "Tweak the value to configure how many zips to process at any given time",
-        "x": 1430,
-        "y": 40,
-        "wires": []
-    },
-    {
-        "id": "262ec069.e07fa",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "Change Log2timeline params here",
-        "info": "",
-        "x": 200,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "bf30b26e.de9b2",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "Change Timesketch CLI params here",
-        "info": "",
-        "x": 210,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "9d6eccdb.04454",
+        "id": "bda47ad6b2b68b50",
         "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "CheckTSComplete",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 810,
-        "y": 580,
-        "wires": [
-            [
-                "883d9df4.78533"
-            ],
-            [
-                "644493b3.8a91dc",
-                "883d9df4.78533"
-            ]
-        ]
-    },
-    {
-        "id": "dfa2b1ab.2de0e",
-        "type": "exec",
-        "z": "545e293e.4e6458",
-        "command": "rm -rf ",
-        "addpay": "unzipdir",
-        "append": "",
-        "useSpawn": "false",
-        "timer": "300",
-        "winHide": false,
-        "oldrc": false,
-        "name": "Delete Unzip Dir",
-        "x": 1040,
-        "y": 420,
-        "wires": [
-            [],
-            [],
-            [
-                "197239e9.8d04f6"
-            ]
-        ]
-    },
-    {
-        "id": "9cdc2c031cb9079b",
-        "type": "exec",
-        "z": "545e293e.4e6458",
-        "command": "unzip",
-        "addpay": "unzipcli",
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "oldrc": false,
-        "name": "Unzip Triage Zip",
-        "x": 1120,
-        "y": 300,
-        "wires": [
-            [],
-            [],
-            [
-                "40bb52206df8872b"
-            ]
-        ]
-    },
-    {
-        "id": "4739fce93d72c8fa",
-        "type": "function",
-        "z": "545e293e.4e6458",
-        "name": "Unzip CLI params",
-        "func": "msg.unzipcli = \"-qo \" + msg.filename + \" -d \" + msg.unzipdir;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 870,
-        "y": 300,
-        "wires": [
-            [
-                "9cdc2c031cb9079b"
-            ]
-        ]
-    },
-    {
-        "id": "40bb52206df8872b",
-        "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "UnzipStatus",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 1370,
-        "y": 320,
-        "wires": [
-            [
-                "3fca2583.81cb3a"
-            ],
-            [
-                "bf6968abac0fe524",
-                "883d9df4.78533"
-            ]
-        ]
-    },
-    {
-        "id": "bf6968abac0fe524",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "Unzip Errors",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1370,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "02d7c06bb6ed1c09",
-        "type": "comment",
-        "z": "545e293e.4e6458",
-        "name": "READ ME! Double Click",
-        "info": "**Following folders need to be created beforehand**\n/cases/processors - this is where Zips will be copied to. Note that zip files will be retained.\n/cases/plaso - this is where plaso files be generated\n\nMake sure Node-RED can write to those folders.\n\n**Unzip utility must be present on the Linux host**\nThis flow uses unzip command to decompress zip files. Make sure you have it pre-installed.\n\n**You need the following Node-RED nodes installed via the palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops -node-red-contrib-simple-queue -node-red-contrib-watchdirectory \n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
-        "x": 160,
-        "y": 40,
-        "wires": []
-    },
-    {
-        "id": "9532d0252e634b91",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "L2T Errors",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 830,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "155f06cb.71a199",
-        "type": "watch-directory",
-        "z": "545e293e.4e6458",
-        "folder": "/cases/processor",
-        "recursive": 0,
-        "typeEvent": "create",
-        "ignoreInitial": true,
-        "ignoredFiles": "",
-        "ignoredFilesType": "re",
-        "name": "Watch for Triage Zips",
-        "x": 120,
-        "y": 160,
-        "wires": [
-            [
-                "f69259b2.a91318"
-            ]
-        ]
-    },
-    {
-        "id": "883d9df4.78533",
-        "type": "simple-queue",
-        "z": "545e293e.4e6458",
-        "name": "Queue Zips",
-        "count": "2",
-        "x": 1410,
-        "y": 80,
-        "wires": [
-            [
-                "a21786c3.24a7f8"
-            ]
-        ]
-    },
-    {
-        "id": "24c8cb33.f6d2d4",
-        "type": "fs-ops-mkdir",
-        "z": "545e293e.4e6458",
-        "name": "Create Unzip Dir",
-        "path": "filedir",
-        "pathType": "msg",
-        "dirname": "dirname",
-        "dirnameType": "msg",
-        "recursive": false,
-        "mode": "777",
-        "fullpath": "dirname",
-        "fullpathType": "msg",
-        "x": 640,
-        "y": 300,
-        "wires": [
-            [
-                "4739fce93d72c8fa"
-            ]
-        ]
-    },
-    {
-        "id": "9f9ca2673cdf0488",
-        "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "Zip File Detection",
+        "z": "7411b2bb3895df8d",
+        "name": "Archive Type Detection",
         "property": "payload",
         "propertyType": "msg",
         "rules": [
@@ -500,49 +520,320 @@
                 "case": true
             },
             {
+                "t": "regex",
+                "v": ".*\\.7z",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.rar",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.tar.(gz|bz2)",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 5,
+        "x": 270,
+        "y": 160,
+        "wires": [
+            [
+                "9e35fcf04aba1277"
+            ],
+            [
+                "5af9f2dcfd5efdb0"
+            ],
+            [
+                "fa652c9228538f62"
+            ],
+            [
+                "735733d5ec6c6af5"
+            ],
+            [
+                "17c93b591446e8e4"
+            ]
+        ]
+    },
+    {
+        "id": "ece36252fd29037f",
+        "type": "link in",
+        "z": "7411b2bb3895df8d",
+        "name": "Identify Archive Type",
+        "links": [
+            "70cb269f2529d4cc"
+        ],
+        "x": 115,
+        "y": 160,
+        "wires": [
+            [
+                "bda47ad6b2b68b50"
+            ]
+        ]
+    },
+    {
+        "id": "17c93b591446e8e4",
+        "type": "debug",
+        "z": "7411b2bb3895df8d",
+        "name": "Unsupported Archive Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "9e35fcf04aba1277",
+        "type": "exec",
+        "z": "7411b2bb3895df8d",
+        "command": "unzip  -t",
+        "addpay": "filename",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "360",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Zip Integrity Check",
+        "x": 530,
+        "y": 80,
+        "wires": [
+            [],
+            [],
+            [
+                "0ad41958105445f0"
+            ]
+        ]
+    },
+    {
+        "id": "0ad41958105445f0",
+        "type": "switch",
+        "z": "7411b2bb3895df8d",
+        "name": "Integrity Check Result",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 590,
-        "y": 160,
+        "x": 820,
+        "y": 140,
         "wires": [
             [
-                "448deb2f9d89d4e8"
+                "20381a751d021a7a"
             ],
             [
-                "c1d68e49480668af"
+                "71219ade5d6837c9"
             ]
         ]
     },
     {
-        "id": "448deb2f9d89d4e8",
+        "id": "71219ade5d6837c9",
+        "type": "debug",
+        "z": "7411b2bb3895df8d",
+        "name": "Archive Integrity Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "5af9f2dcfd5efdb0",
         "type": "exec",
-        "z": "545e293e.4e6458",
-        "command": "unzip -t",
+        "z": "7411b2bb3895df8d",
+        "command": "7z t",
         "addpay": "filename",
         "append": "",
         "useSpawn": "false",
-        "timer": "",
+        "timer": "360",
         "winHide": false,
         "oldrc": false,
-        "name": "Zip Integrity Check",
-        "x": 870,
-        "y": 160,
+        "name": "7z Integrity Check",
+        "x": 530,
+        "y": 140,
         "wires": [
             [],
             [],
             [
-                "9572936abb73579f"
+                "0ad41958105445f0"
             ]
         ]
     },
     {
-        "id": "c1d68e49480668af",
+        "id": "735733d5ec6c6af5",
+        "type": "exec",
+        "z": "7411b2bb3895df8d",
+        "command": "tar -tf",
+        "addpay": "filename",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "360",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Tar Gz or Bz2 Integrity Check",
+        "x": 560,
+        "y": 260,
+        "wires": [
+            [],
+            [],
+            [
+                "0ad41958105445f0"
+            ]
+        ]
+    },
+    {
+        "id": "20381a751d021a7a",
+        "type": "link out",
+        "z": "7411b2bb3895df8d",
+        "name": "Integrity Check Passed",
+        "mode": "link",
+        "links": [
+            "c3c312389fa2a33b"
+        ],
+        "x": 1055,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "fa652c9228538f62",
+        "type": "exec",
+        "z": "7411b2bb3895df8d",
+        "command": "unrar t",
+        "addpay": "filename",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "360",
+        "winHide": false,
+        "oldrc": false,
+        "name": "WinRAR Integrity Check",
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [],
+            [],
+            [
+                "0ad41958105445f0"
+            ]
+        ]
+    },
+    {
+        "id": "932d7f36e7bf7b3f",
+        "type": "link in",
+        "z": "494774cbd108cd57",
+        "name": "DecompressIn",
+        "links": [
+            "7c111868273a3fc3"
+        ],
+        "x": 215,
+        "y": 160,
+        "wires": [
+            [
+                "892ce5d08f5ab011"
+            ]
+        ]
+    },
+    {
+        "id": "892ce5d08f5ab011",
+        "type": "switch",
+        "z": "494774cbd108cd57",
+        "name": "Decompress Archive",
+        "property": "filename",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": ".*\\.zip",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.7z",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.rar",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.tar.gz",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "regex",
+                "v": ".*\\.tar.bz2",
+                "vt": "str",
+                "case": true
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 6,
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "b2ebba6f1111aca2"
+            ],
+            [
+                "3a45431c1ab91338"
+            ],
+            [
+                "f7b3568ee7fd98e7"
+            ],
+            [
+                "e2aad3e8e860ca2b"
+            ],
+            [
+                "bb154e92a3f50581"
+            ],
+            [
+                "f1a85f7f32369dcc"
+            ]
+        ]
+    },
+    {
+        "id": "f1a85f7f32369dcc",
         "type": "debug",
-        "z": "545e293e.4e6458",
+        "z": "494774cbd108cd57",
         "name": "Unsupported File Error",
         "active": true,
         "tosidebar": true,
@@ -552,122 +843,131 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 60,
+        "x": 460,
+        "y": 360,
         "wires": []
     },
     {
-        "id": "9572936abb73579f",
-        "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "Post Zip Integrity Check Action",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 1090,
-        "y": 80,
+        "id": "b2ebba6f1111aca2",
+        "type": "exec",
+        "z": "494774cbd108cd57",
+        "command": "unzip",
+        "addpay": "unzipcli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Unzip Archive",
+        "x": 640,
+        "y": 40,
         "wires": [
+            [],
+            [],
             [
-                "883d9df4.78533"
-            ],
-            [
-                "6942c391b7be7a5e"
+                "472bee379d11d902"
             ]
         ]
     },
     {
-        "id": "6942c391b7be7a5e",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "Zip Integrity Error",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1090,
-        "y": 20,
-        "wires": []
-    },
-    {
-        "id": "197239e9.8d04f6",
-        "type": "switch",
-        "z": "545e293e.4e6458",
-        "name": "Delete Folder",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 1260,
-        "y": 440,
+        "id": "3a45431c1ab91338",
+        "type": "exec",
+        "z": "494774cbd108cd57",
+        "command": "7z",
+        "addpay": "sevzipcli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "7zip Decompress",
+        "x": 650,
+        "y": 100,
         "wires": [
+            [],
+            [],
             [
-                "b1f641f0.257c3"
-            ],
-            [
-                "883d9df4.78533",
-                "6e355990aa202c01"
+                "472bee379d11d902"
             ]
         ]
     },
     {
-        "id": "d0f0410536029177",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "Plaso Error",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 910,
-        "y": 500,
+        "id": "e2aad3e8e860ca2b",
+        "type": "exec",
+        "z": "494774cbd108cd57",
+        "command": "tar",
+        "addpay": "targzcli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "TarGzip Decompress",
+        "x": 660,
+        "y": 220,
+        "wires": [
+            [],
+            [],
+            [
+                "472bee379d11d902"
+            ]
+        ]
+    },
+    {
+        "id": "472bee379d11d902",
+        "type": "link out",
+        "z": "494774cbd108cd57",
+        "name": "Decompress Status Out",
+        "mode": "link",
+        "links": [
+            "7d5c86e1dc66ee87"
+        ],
+        "x": 955,
+        "y": 100,
         "wires": []
     },
     {
-        "id": "6e355990aa202c01",
-        "type": "debug",
-        "z": "545e293e.4e6458",
-        "name": "Folder Deletion Error",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1340,
-        "y": 500,
-        "wires": []
+        "id": "f7b3568ee7fd98e7",
+        "type": "exec",
+        "z": "494774cbd108cd57",
+        "command": "unrar",
+        "addpay": "unrarcli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "WinRAR Decompress",
+        "x": 660,
+        "y": 160,
+        "wires": [
+            [],
+            [],
+            [
+                "472bee379d11d902"
+            ]
+        ]
+    },
+    {
+        "id": "bb154e92a3f50581",
+        "type": "exec",
+        "z": "494774cbd108cd57",
+        "command": "tar",
+        "addpay": "tarbz2cli",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "TarBzip2 Decompress",
+        "x": 660,
+        "y": 280,
+        "wires": [
+            [],
+            [],
+            [
+                "472bee379d11d902"
+            ]
+        ]
     }
 ]
