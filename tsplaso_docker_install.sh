@@ -44,11 +44,11 @@ sudo apt-get update
  docker-compose up -d
 
  # Download docker version of plaso
- #docker pull log2timeline/plaso
+ docker pull log2timeline/plaso:20220428
  
- add-apt-repository ppa:gift/stable -y
- apt-get update
- apt-get install plaso-tools -y
+ #add-apt-repository ppa:gift/stable -y
+ #apt-get update
+ #apt-get install plaso-tools -y
 
  # Install Timesketch import client to assist with larger plaso uploads
  pip3 install timesketch-import-client
