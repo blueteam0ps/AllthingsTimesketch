@@ -747,7 +747,7 @@ win_wshremotesource:
   view_name: 'T1021-Windows Script Host Remote Enabled (Source)'
 
 win_wshdestination:
-  query_string: 'parser:"filestat" AND (filename:"*Windows\\Temp\\*" OR filename:wsh*)'
+  query_string: 'parser:"filestat" AND (filename:"*Windows\\Temp\\*" AND filename:wsh*)'
   tags: ['win','T1021','Lateral Movement','destination','High']
   emojis: ['MARK']
   create_view: true
