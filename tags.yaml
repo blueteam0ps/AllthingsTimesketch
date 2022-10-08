@@ -780,7 +780,7 @@ win_uacbypass:
   
 #source https://jpcertcc.github.io/ToolAnalysisResultSheet/details/mstsc.htm
 win_rdpclient:
-  query_string: 'parser:winreg AND (key_path:"*Microsoft\\Terminal Server Client\\Default*" OR key_path:"*Microsoft\\Terminal Server Client\\Servers*")'
+  query_string: 'parser:winreg AND (key_path:"*Microsoft\\Terminal Server Client\\Default*" OR key_path:"*Microsoft\\Terminal Server Client\\Servers*") AND NOT message:*empty*'
   tags: ['win','T1021.001','T1021','Lateral-Movement','source','RDP','Info']
   emojis: ['MARK']
   create_view: true
