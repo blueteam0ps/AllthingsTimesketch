@@ -56,7 +56,7 @@ sudo apt-get update
   # Download the latest tags file from blueteam0ps repo
  wget -N https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tags.yaml -O /opt/timesketch/etc/timesketch/tags.yaml
 
- sudo docker-compose exec timesketch-web tsctl create-user --username $USER1_NAME --password $USER1_PASSWORD
+ sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
 
  #Increasing the CSRF token time limit
  echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
