@@ -3,91 +3,79 @@
 # Tested on Ubuntu 20.04 LTS Server Edition
 # Created by Janantha Marasinghe
 #
-# Usage: sudo ./tsplaso_docker_install.sh 
+# Usage: sudo  echo -ne '\n' | ./tsplaso_docker_install.sh 
 #
-
 # Update APT database
 sudo apt-get update
 
-# Install Docker CE and Archiving Tools
- apt-get install apt-transport-https ca-certificates curl gnupg lsb-release unzip unrar -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-  echo \
-  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
- apt-get update
- apt-get install docker-ce docker-ce-cli containerd.io -y
- apt-get install python3-pip -y
+# Install all pre-required Linux packages
+apt-get update
+apt-get install apt-transport-https ca-certificates curl gnupg lsb-release unzip unrar docker-ce docker-ce-cli containerd.io python3-pip docker-compose -y
 
- #Setting default user creds
- USER1_NAME=jdoe
- USER1_PASSWORD=$(openssl rand -base64 12)
+#Setting default user creds
+USER1_NAME=jdoe
+USER1_PASSWORD=$(openssl rand -base64 12)
 
- # Install Docker Compose
- apt install docker-compose -y
- cd /opt
+cd /opt
 
- # Download and install Timesketch
- curl -s -O https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh
- chmod 755 deploy_timesketch.sh
- ./deploy_timesketch.sh
- cd /opt/timesketch
+# Download and install Timesketch
+curl -s -O https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh
+chmod 755 deploy_timesketch.sh
+./deploy_timesketch.sh
+cd /opt/timesketch
  
- # Custom Docker-Compose file to include a separate Kibana instance and tsylink attachment
- #curl -s -O https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml
+# Download docker version of plaso
+docker pull log2timeline/plaso
  
- # Create a user-defined docker bridge network 
- #docker network create tsylink
+#add-apt-repository ppa:gift/stable -y
+#apt-get update
+#apt-get install plaso-tools -y
 
- docker-compose up -d
+# Install Timesketch import client to assist with larger plaso uploads
+pip3 install timesketch-import-client
 
- # Download docker version of plaso
- docker pull log2timeline/plaso:20220428
+# Download the latest tags file from blueteam0ps repo
+wget -Nq https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tags.yaml -O /opt/timesketch/etc/timesketch/tags.yaml
+
+#Increase the CSRF token time limit
+echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
+
+sudo docker-compose up -d
+
+# Create the first user account
+sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
+
+# Create directories to hold the self-signed cert and the key 
+sudo mkdir -p /opt/timesketch/ssl/certs
+sudo mkdir -p /opt/timesketch/ssl/private
  
- #add-apt-repository ppa:gift/stable -y
- #apt-get update
- #apt-get install plaso-tools -y
+# Generate a local self-signed certificate for HTTPS operations
+openssl req -x509 -out /opt/timesketch/ssl/certs/localhost.crt -keyout /opt/timesketch/ssl/private/localhost.key -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' -extensions EXT -config <( printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+  
+#Restrict private key permissions
+chmod 600 /opt/timesketch/ssl/private/localhost.key
 
- # Install Timesketch import client to assist with larger plaso uploads
- pip3 install timesketch-import-client
+# Download the custom nginx configuration
+# Nginx modified to add the self-signed cert configuration
+wget -Nq https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/nginx.conf -O /opt/timesketch/etc/nginx.conf
 
-  # Download the latest tags file from blueteam0ps repo
- wget -N https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tags.yaml -O /opt/timesketch/etc/timesketch/tags.yaml
+# Download the custom docker-compose configuration
+# docker-compose modified to add the volume containing ssl cert and key for nginx
+wget -Nq https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/docker-compose.yml -O /opt/timesketch/docker-compose.yml
 
- sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
+# Start all docker containers to make the changes effective
+sudo docker-compose down
+sudo docker-compose up -d
 
- #Increasing the CSRF token time limit
- echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timesketch.conf
-
- #Restart Timesketch web app docker so that it gets the latest config
- docker restart timesketch-web
- 
- cd /opt/
- #Downloading the Plaso Filter File 
- curl -s -O https://raw.githubusercontent.com/log2timeline/plaso/main/data/filter_windows.yaml
- 
- ###NOTE - Event drops observed when the pipelines were used so this requires further investigation.
- #Insane Technologies pipelines https://github.com/InsaneTechnologies/elasticsearch-plaso-pipelines
- #git clone https://github.com/blueteam0ps/elasticsearch-plaso-pipelines.git
- #cd elasticsearch-plaso-pipelines/
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-olecf?pretty -d @plaso-olecf.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-evidenceof?pretty -d @plaso-evidenceof.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-geoip?pretty -d @plaso-geoip.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-winevt?pretty -d @plaso-winevt.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso-normalise?pretty -d @plaso-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/iis-normalise?pretty -d @iis-normalise.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -s -X PUT -H content-type:application/json http://localhost:9200/_ingest/pipeline/plaso?pretty -d @plaso.json | tee /dev/stderr | grep -sq '"acknowledged" : true'
- #curl -X PUT "http://localhost:9200/_template/insaneplaso" -H 'Content-Type: application/json' -d'{  "index_patterns": [    "o365-*",    "plaso-*",    "dfir-*",    "iis-*",    "siem*"  ],  "order": 0,  "settings": {    "index": {      "default_pipeline": "plaso"    }  },  "mappings": {},  "aliases": {}}'
- 
- #Commenting as I need to test using OpenSearch
- #Running Timesketch tagger on large number of timelines can exceed the 500 scroll context limit. This causes errors. A fix was to increase the scroll context count
- #curl -X PUT "http://localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'{ "persistent" : { "search.max_open_scroll_context": 1024}, "transient": {"search.max_open_scroll_context": 1024}}'
-
- echo -e "************************************************\n"
- printf "Timesketch User Details\n"
- echo -e "************************************************\n"
- printf "User name is $USER1_NAME and the password is $USER1_PASSWORD\n"
- echo -e "************************************************\n"
- echo -e "************************************************\n"
+echo -e "************************************************\n"
+printf "Timesketch User Details\n"
+echo -e "************************************************\n"
+printf "User name is $USER1_NAME and the password is $USER1_PASSWORD\n"
+echo -e "************************************************\n"
+echo -e "************************************************\n"
