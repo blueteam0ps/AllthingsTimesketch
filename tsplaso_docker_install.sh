@@ -48,9 +48,6 @@ echo -e '\nWTF_CSRF_TIME_LIMIT = 3600' >> /opt/timesketch/etc/timesketch/timeske
 
 sudo docker-compose up -d
 
-# Create the first user account
-sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
-
 # Create directories to hold the self-signed cert and the key 
 sudo mkdir -p /opt/timesketch/ssl/certs
 sudo mkdir -p /opt/timesketch/ssl/private
@@ -72,6 +69,12 @@ wget -Nq https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/maste
 # Start all docker containers to make the changes effective
 sudo docker-compose down
 sudo docker-compose up -d
+
+# Giving few seconds for the docker instances to poweron 
+sleep 15
+
+# Create the first user account
+sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
 
 echo -e "************************************************\n"
 printf "Timesketch User Details\n"
