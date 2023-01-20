@@ -74,7 +74,7 @@ sudo docker-compose up -d
 sleep 15
 
 # Create the first user account
-sudo docker-compose exec timesketch-web tsctl create-user $USER1_NAME --password $USER1_PASSWORD
+sudo docker-compose exec timesketch-web tsctl add_user $USER1_NAME --password $USER1_PASSWORD
 
 echo -e "************************************************\n"
 printf "Timesketch User Details\n"
