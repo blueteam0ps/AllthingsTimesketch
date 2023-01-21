@@ -11,7 +11,7 @@ This section provides a brief overview of the automation setup and how things ar
 
 #### Node-RED Workflow to handle triage archive processing
 Node-RED is a browser based flow editor which provides an easier way to achieve automation. 
-[NR_DFIR](https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/NR_DFIRFlow.json) is an automation workflow where the flow will watch for archive files created at /cases/processor directory. When new triage archive files get created (Tested with CyLR and KAPE zips) it will run an integrity check and decompress them to unique folders, parses it with Log2timeline and ingests into Timesketch. It has the ability to queue up archive files for processing. This way you have the option to control how many archive files gets processed at any given point in time.
+[NR_DFIR](https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/NR_DFIRFlow.json) is an automation workflow where the flow will watch for archive files created at /cases/processor directory. When new triage archive files get created (Tested with CyLR and KAPE zips) it will run an integrity check and decompress them to unique folders, parses it with Log2timeline and ingests into Timesketch. It has the ability to queue up archive files for processing. This way you have the option to control how many archive files gets processed at any given point in time. 
 
 The Node-RED workflow contains three flows
 1. #### Triage Artefact Processor
@@ -32,6 +32,7 @@ This flow is used to detect the type of the archive and perform the relevant dec
 Note: This script was tested on the latest Ubuntu 20.04.5 Server Edition.
 
 #### Usage instructions for the script
+##IMPORTANT - This bash script uses a custom version of nginx.conf and docker-compose.yml
 wget https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh
 chmod a+x ./tsplaso_docker_install.sh
 sudo ./tsplaso_docker_install.sh
@@ -42,7 +43,8 @@ A [tagging file](https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesket
 
 ## Pre-requisites
 ---------------------
-1. Install and configure Timesketch and Log2timeline. [tsplaso_docker_install.sh script](https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh) can assist with that 
+1. Install and configure Timesketch and Log2timeline. [tsplaso_docker_install.sh script](https://raw.githubusercontent.com/blueteam0ps/AllthingsTimesketch/master/tsplaso_docker_install.sh) can assist with that. 
+IMPORTANT!!! - tsplaso_docker_install.sh generates a self-signed certificate for the hostname 'localhost' and sets the nginx proxy configuration to use it.
 2. Install Node-RED using the instructions given at https://nodered.org/docs/getting-started/. This has been tested on Ubuntu 20.04.5 LTS (https://nodered.org/docs/getting-started/raspberrypi)
 3. Pre-install any archiving tools on your host (i.e. unrar, 7z , unzip)
 4. This automation depends on the following additonal nodes. I recommend installing it directly via the GUI -> Manage Pallette
