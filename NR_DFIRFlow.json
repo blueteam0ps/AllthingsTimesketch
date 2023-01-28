@@ -7,6 +7,14 @@
         "info": ""
     },
     {
+        "id": "e852995364e3dc8d",
+        "type": "tab",
+        "label": "Hayabusa Process",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "7411b2bb3895df8d",
         "type": "tab",
         "label": "Detect Archive & Integrity Check",
@@ -23,6 +31,14 @@
         "env": []
     },
     {
+        "id": "bdf6dc5bd7068a5c",
+        "type": "tab",
+        "label": "Slack Notifications",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "3fca2583.81cb3a",
         "type": "function",
         "z": "545e293e.4e6458",
@@ -33,8 +49,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 180,
-        "y": 360,
+        "x": 200,
+        "y": 520,
         "wires": [
             [
                 "598f0e43.5e474"
@@ -53,8 +69,8 @@
         "winHide": false,
         "oldrc": false,
         "name": "Log2timeline Process",
-        "x": 440,
-        "y": 360,
+        "x": 460,
+        "y": 520,
         "wires": [
             [],
             [],
@@ -76,7 +92,7 @@
         "oldrc": false,
         "name": "Timesketch Import Process",
         "x": 460,
-        "y": 520,
+        "y": 700,
         "wires": [
             [],
             [],
@@ -90,14 +106,14 @@
         "type": "function",
         "z": "545e293e.4e6458",
         "name": "Timesketch CLI params",
-        "func": "var plasofullpath = \"/cases/plaso/\"+ msg.plasofname + \".plaso\";\nmsg.tsimport = \"-u username -p password --host http://127.0.0.1 --timeline_name \" + msg.plasofname + \"-triage\" + \" --sketch_id \" + \"1\" + \" \" + plasofullpath;\nreturn msg;",
+        "func": "var plasofullpath = \"/cases/plaso/\"+ msg.plasofname + \".plaso\";\nmsg.tsimport = \"-u user -p pass --host http://127.0.0.1 --timeline_name \" + msg.plasofname + \"-triage\" + \" --sketch_id \" + \"1\" + \" \" + plasofullpath;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 170,
-        "y": 520,
+        "y": 700,
         "wires": [
             [
                 "2f75f229.1e859e"
@@ -118,7 +134,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1050,
-        "y": 560,
+        "y": 740,
         "wires": []
     },
     {
@@ -135,9 +151,9 @@
         "id": "59011b6e.86f384",
         "type": "comment",
         "z": "545e293e.4e6458",
-        "name": "Adjust archives to process at any given point",
+        "name": "Double click on Queue Zips to the adjust bulk processing value",
         "info": "Tweak the value to configure how many archives to process at any given time",
-        "x": 890,
+        "x": 940,
         "y": 120,
         "wires": []
     },
@@ -147,8 +163,8 @@
         "z": "545e293e.4e6458",
         "name": "Change Log2timeline params here",
         "info": "",
-        "x": 180,
-        "y": 320,
+        "x": 200,
+        "y": 480,
         "wires": []
     },
     {
@@ -158,7 +174,7 @@
         "name": "Change Timesketch CLI params here",
         "info": "",
         "x": 190,
-        "y": 480,
+        "y": 660,
         "wires": []
     },
     {
@@ -182,14 +198,16 @@
         "repair": false,
         "outputs": 2,
         "x": 760,
-        "y": 540,
+        "y": 720,
         "wires": [
             [
-                "883d9df4.78533"
+                "883d9df4.78533",
+                "23efdbf0c875e9b4"
             ],
             [
                 "644493b3.8a91dc",
-                "883d9df4.78533"
+                "883d9df4.78533",
+                "ece35af458a6d609"
             ]
         ]
     },
@@ -205,8 +223,8 @@
         "winHide": false,
         "oldrc": false,
         "name": "Delete Decompressed Dir",
-        "x": 930,
-        "y": 360,
+        "x": 950,
+        "y": 520,
         "wires": [
             [],
             [],
@@ -239,11 +257,13 @@
         "y": 220,
         "wires": [
             [
-                "3fca2583.81cb3a"
+                "fae6e3390a3b1086",
+                "ecbf1cee3ab9b24d"
             ],
             [
                 "bf6968abac0fe524",
-                "883d9df4.78533"
+                "883d9df4.78533",
+                "b53467717a6686a2"
             ]
         ]
     },
@@ -260,7 +280,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 710,
+        "x": 730,
         "y": 240,
         "wires": []
     },
@@ -268,9 +288,9 @@
         "id": "02d7c06bb6ed1c09",
         "type": "comment",
         "z": "545e293e.4e6458",
-        "name": "READ ME! Double Click",
-        "info": "**CURRENT CONFIG OF THE AUTOMATION DO NOT PROCESS NESTED ZIPS OF HOSTS.FOR EXAMPLE, YOU CANNOT UPLOAD A SINGLE ZIP CONTAINING TRIAGE ARCHIVES OF N DIFFERENT HOSTS.**\n\n**Following folders need to be created beforehand**\n/cases/processor - this is where archives will need to be copied to. Note that the original archives copied here will be retained indefinitely.\n/cases/plaso - this is where plaso files be stored after log2timeline completes its processing.\n\nMake sure Node-RED can read and write to all folders under /cases.\n\n**Compression utility must be pre-installed on the Linux host prior running the workflow**\nThis automation is configured to detect Zip, RAR, Tar GZ & BZ2, 7z archives.\n\n** \"Variable Setup\" node** \nThis node contains the key commandline parameters used for archive tools and other variables required for automation.\n\n**You need the following Node-RED nodes installed via the palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops -node-red-contrib-simple-queue -node-red-contrib-watchdirectory \n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
-        "x": 160,
+        "name": "READ ME FIRST! Double Click",
+        "info": "**CURRENT CONFIG OF THE AUTOMATION DO NOT PROCESS NESTED ZIPS OF HOSTS.FOR EXAMPLE, YOU CANNOT UPLOAD A SINGLE ZIP CONTAINING TRIAGE ARCHIVES OF N DIFFERENT HOSTS.**\n\n**Following folders need to be created beforehand**\n/cases/processor - this is where archives will need to be copied to. Note that the original archives copied here will be retained indefinitely.\n/cases/plaso - this is where plaso files be stored after log2timeline completes its processing.\n/cases/evtxproc/ -processed hayabusa csvs will be stored here.\n\n**Hayabusa Evtx Processing***\nThis is currently configured for KAPE triage configurations, where the evtx is expected like below\nunzipped directory/C/Windows/System32/winevt/. You can change the path by updating the path in Hayabusa Process Variables node. You must change the timesketch username and password information in the same node. Otherwise it will fail to ingest to Timesketch\n\n***Slack notifications***\nYou must set the slack webhook and username configuration within the \"Notification to Slack\" node within \"Slack Notifications\" flow \n\nMake sure Node-RED can read and write to all folders under /cases.\n\n**Compression utility must be pre-installed on the Linux host prior running the workflow**\nThis automation is configured to detect Zip, RAR, Tar GZ & BZ2, 7z archives.\n\n** \"Variable Setup\" node** \nThis node contains the key commandline parameters used for archive tools and other variables required for automation.\n\n**You need the following Node-RED nodes installed via the Node-RED palette**\n\n-node-red-contrib-fs \n-node-red-contrib-fs-ops \n-node-red-contrib-simple-queue \n-node-red-contrib-watchdirectory\n-node-red-contrib-slack\n\n**Change the Log2Timeline CLI Parameters and Timesketch CLI Parameters**\nYou should review the CLI parameters used for Log2timeline and Timesketch in their respective nodes. \n\n\n**FYI Only**\nNode-RED has a default memory cap of 2GB. You can increase this through the use of environment variables. Add the following to your bash.rc of the user in which Node-RED runs. Size is in MB.\n\nNODE_OPTIONS=--max_old_space_size=4096",
+        "x": 190,
         "y": 40,
         "wires": []
     },
@@ -278,8 +298,8 @@
         "id": "155f06cb.71a199",
         "type": "watch-directory",
         "z": "545e293e.4e6458",
-        "folder": "/cases/processor",
-        "recursive": 0,
+        "folder": "/cases/processor/",
+        "recursive": "0",
         "typeEvent": "create",
         "ignoreInitial": true,
         "ignoredFiles": "",
@@ -304,7 +324,8 @@
         "y": 160,
         "wires": [
             [
-                "24c8cb33.f6d2d4"
+                "24c8cb33.f6d2d4",
+                "6605cf4eb0370499"
             ]
         ]
     },
@@ -349,15 +370,17 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1180,
-        "y": 360,
+        "x": 1200,
+        "y": 520,
         "wires": [
             [
-                "b1f641f0.257c3"
+                "b1f641f0.257c3",
+                "93fb06660e035172"
             ],
             [
                 "883d9df4.78533",
-                "6e355990aa202c01"
+                "6e355990aa202c01",
+                "edb1d95b882ceb09"
             ]
         ]
     },
@@ -374,8 +397,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 940,
-        "y": 280,
+        "x": 960,
+        "y": 440,
         "wires": []
     },
     {
@@ -391,8 +414,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1360,
-        "y": 420,
+        "x": 1440,
+        "y": 540,
         "wires": []
     },
     {
@@ -493,17 +516,509 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 660,
-        "y": 360,
+        "x": 680,
+        "y": 520,
         "wires": [
             [
-                "dfa2b1ab.2de0e"
+                "dfa2b1ab.2de0e",
+                "f804fb261eadcbe6"
             ],
             [
                 "883d9df4.78533",
-                "d0f0410536029177"
+                "d0f0410536029177",
+                "39cbada522a7e0b0"
             ]
         ]
+    },
+    {
+        "id": "b53467717a6686a2",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Decompression Failure",
+        "mode": "link",
+        "links": [
+            "a51619547fd25341"
+        ],
+        "x": 695,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "fae6e3390a3b1086",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Decompression Success",
+        "mode": "link",
+        "links": [
+            "457d8b093addc633"
+        ],
+        "x": 635,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f804fb261eadcbe6",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Plaso-Success",
+        "mode": "link",
+        "links": [
+            "62de099a80194b33"
+        ],
+        "x": 775,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "39cbada522a7e0b0",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Plaso Failure",
+        "mode": "link",
+        "links": [
+            "f0d5873e47157905"
+        ],
+        "x": 775,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "23efdbf0c875e9b4",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Timesketch Ingestion Success",
+        "mode": "link",
+        "links": [
+            "7052c7cf3cf25128"
+        ],
+        "x": 945,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "ece35af458a6d609",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Timesketch Ingestion Failure",
+        "mode": "link",
+        "links": [
+            "f9b82b65a5326b3c"
+        ],
+        "x": 935,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "6605cf4eb0370499",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Queue Release",
+        "mode": "link",
+        "links": [
+            "954a99732b5f5b6e"
+        ],
+        "x": 1055,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "93fb06660e035172",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Folder Deletion Success",
+        "mode": "link",
+        "links": [
+            "6c22648338d35c5a"
+        ],
+        "x": 1315,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "edb1d95b882ceb09",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Notification-OUT-Folder Deletion Failure",
+        "mode": "link",
+        "links": [
+            "fee6a9fad207729c"
+        ],
+        "x": 1315,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "ecbf1cee3ab9b24d",
+        "type": "function",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa Process Variables",
+        "func": "//Create a variable to store the EVTX directory path\nmsg.winevt = msg.dirname + '/C/Windows/System32/winevt/';\nmsg.hayabusa_job = msg.plasofname + '-hayabusa';\nmsg.hayabusa_out = '/cases/evtxproc/' + msg.hayabusa_job;\nmsg.hayabusa_exec =  ' csv-timeline -d ' +msg.winevt+ ' --RFC-3339 -o' + msg.hayabusa_out + '.csv' + ' -p timesketch-verbose -U'\nmsg.hayabusa_ts = \"-u username -p username --host http://127.0.0.1 --timeline_name \" + msg.hayabusa_job + \" --sketch_id \" + \"1 \" + msg.hayabusa_out + '.csv';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 360,
+        "wires": [
+            [
+                "1dc4fe92859ad646"
+            ]
+        ]
+    },
+    {
+        "id": "1dc4fe92859ad646",
+        "type": "link out",
+        "z": "545e293e.4e6458",
+        "name": "Out to Hayabusa Process",
+        "mode": "link",
+        "links": [
+            "b3292729f0f4e2a6"
+        ],
+        "x": 355,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "580d2541de297fc5",
+        "type": "link in",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa to Timesketch In",
+        "links": [
+            "b9a267874af84c06"
+        ],
+        "x": 35,
+        "y": 520,
+        "wires": [
+            [
+                "3fca2583.81cb3a"
+            ]
+        ]
+    },
+    {
+        "id": "685c3171f4df43e3",
+        "type": "link in",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa Process Failed",
+        "links": [
+            "0a3667ee506b3355"
+        ],
+        "x": 415,
+        "y": 360,
+        "wires": [
+            [
+                "883d9df4.78533",
+                "a0b6d49ae7ca8dbb"
+            ]
+        ]
+    },
+    {
+        "id": "a0b6d49ae7ca8dbb",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "1577fd627ecd3fb7",
+        "type": "link in",
+        "z": "545e293e.4e6458",
+        "name": "From Hayabusa Failure",
+        "links": [
+            "67aff58f1040acc5"
+        ],
+        "x": 415,
+        "y": 420,
+        "wires": [
+            [
+                "883d9df4.78533",
+                "c6354a8b3bd921f9"
+            ]
+        ]
+    },
+    {
+        "id": "c6354a8b3bd921f9",
+        "type": "debug",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa Timesketch Ingestion Failure",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "d1a0d468d5eda566",
+        "type": "comment",
+        "z": "545e293e.4e6458",
+        "name": "Hayabusa specific config here",
+        "info": "",
+        "x": 180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "56455a586c5705d5",
+        "type": "exec",
+        "z": "e852995364e3dc8d",
+        "command": "/opt/hayabusa/hayabusa-2.1.0-lin-musl",
+        "addpay": "hayabusa_exec",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Hayabusa Evtx Process",
+        "x": 330,
+        "y": 180,
+        "wires": [
+            [],
+            [],
+            [
+                "b96ffb08704e6877"
+            ]
+        ]
+    },
+    {
+        "id": "b96ffb08704e6877",
+        "type": "switch",
+        "z": "e852995364e3dc8d",
+        "name": "Evtx Process Status",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 580,
+        "y": 200,
+        "wires": [
+            [
+                "615766a9b07f42e7",
+                "f22865491073bd80"
+            ],
+            [
+                "0a3667ee506b3355",
+                "a401a10d39c4ee58"
+            ]
+        ]
+    },
+    {
+        "id": "615766a9b07f42e7",
+        "type": "exec",
+        "z": "e852995364e3dc8d",
+        "command": "timesketch_importer",
+        "addpay": "hayabusa_ts",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Ingest Hayabusa data",
+        "x": 820,
+        "y": 140,
+        "wires": [
+            [],
+            [],
+            [
+                "727db6fc46291f27"
+            ]
+        ]
+    },
+    {
+        "id": "b3292729f0f4e2a6",
+        "type": "link in",
+        "z": "e852995364e3dc8d",
+        "name": "Input Evtx Process",
+        "links": [
+            "1dc4fe92859ad646"
+        ],
+        "x": 155,
+        "y": 180,
+        "wires": [
+            [
+                "56455a586c5705d5"
+            ]
+        ]
+    },
+    {
+        "id": "727db6fc46291f27",
+        "type": "switch",
+        "z": "e852995364e3dc8d",
+        "name": "Hayabusa Out to Timesketch",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1060,
+        "y": 160,
+        "wires": [
+            [
+                "b9a267874af84c06",
+                "326fb090a1da2129"
+            ],
+            [
+                "67aff58f1040acc5",
+                "d396c0b276fcf2b7"
+            ]
+        ]
+    },
+    {
+        "id": "0a3667ee506b3355",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Hayabusa Error Out",
+        "mode": "link",
+        "links": [
+            "685c3171f4df43e3"
+        ],
+        "x": 775,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "b9a267874af84c06",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Hayabusa to Timesketch Out",
+        "mode": "link",
+        "links": [
+            "580d2541de297fc5"
+        ],
+        "x": 1255,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "67aff58f1040acc5",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Hayabusa to Timesketch Failure",
+        "mode": "link",
+        "links": [
+            "1577fd627ecd3fb7"
+        ],
+        "x": 1255,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a401a10d39c4ee58",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Notification-OUT-Hayabusa Process Failure",
+        "mode": "link",
+        "links": [
+            "58a96201a60bb8f7"
+        ],
+        "x": 775,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "f22865491073bd80",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Notification-OUT-Hayabusa Process Success",
+        "mode": "link",
+        "links": [
+            "a84685eb9077a89b"
+        ],
+        "x": 775,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "e5fa930a949be077",
+        "type": "comment",
+        "z": "e852995364e3dc8d",
+        "name": "Slack notification nodes",
+        "info": "",
+        "x": 720,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d396c0b276fcf2b7",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Notification-OUT-Hayabusa Timesketch Ingestion Failure",
+        "mode": "link",
+        "links": [
+            "be97ece24aa53ecf"
+        ],
+        "x": 1275,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "326fb090a1da2129",
+        "type": "link out",
+        "z": "e852995364e3dc8d",
+        "name": "Notification-OUT-Hayabusa Timesketch Ingestion Success",
+        "mode": "link",
+        "links": [
+            "0f7d8fd583347351"
+        ],
+        "x": 1275,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "74a4b93a2a2eac46",
+        "type": "comment",
+        "z": "e852995364e3dc8d",
+        "name": "Slack notification nodes",
+        "info": "",
+        "x": 1240,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f377c821c510ac40",
+        "type": "comment",
+        "z": "e852995364e3dc8d",
+        "name": "Change Hayabusa Path here",
+        "info": "",
+        "x": 360,
+        "y": 120,
+        "wires": []
     },
     {
         "id": "bda47ad6b2b68b50",
@@ -843,8 +1358,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 460,
-        "y": 360,
+        "x": 660,
+        "y": 340,
         "wires": []
     },
     {
@@ -858,8 +1373,8 @@
         "timer": "",
         "winHide": false,
         "oldrc": false,
-        "name": "Unzip Archive",
-        "x": 640,
+        "name": "Unzip Decompress",
+        "x": 650,
         "y": 40,
         "wires": [
             [],
@@ -967,6 +1482,474 @@
             [],
             [
                 "472bee379d11d902"
+            ]
+        ]
+    },
+    {
+        "id": "457d8b093addc633",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Decompression Success",
+        "links": [
+            "fae6e3390a3b1086"
+        ],
+        "x": 255,
+        "y": 120,
+        "wires": [
+            [
+                "36c5ec2aba13438e"
+            ]
+        ]
+    },
+    {
+        "id": "36c5ec2aba13438e",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Decompression Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" +msg.filename + \" file was decompressed successfully\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 120,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "a51619547fd25341",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Decompression Failure",
+        "links": [
+            "b53467717a6686a2"
+        ],
+        "x": 255,
+        "y": 180,
+        "wires": [
+            [
+                "47bcc30c27cf3b66"
+            ]
+        ]
+    },
+    {
+        "id": "47bcc30c27cf3b66",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Decompression Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + msg.filename + \" file decompression was unsuccessful\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 180,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "f0d5873e47157905",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Plaso Generation Failure",
+        "links": [
+            "39cbada522a7e0b0"
+        ],
+        "x": 255,
+        "y": 240,
+        "wires": [
+            [
+                "45ee7a6d8095a942"
+            ]
+        ]
+    },
+    {
+        "id": "62de099a80194b33",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Plaso Generation Success",
+        "links": [
+            "f804fb261eadcbe6"
+        ],
+        "x": 255,
+        "y": 300,
+        "wires": [
+            [
+                "6cdf3d577af9b0a0"
+            ]
+        ]
+    },
+    {
+        "id": "aca22b06e47e565c",
+        "type": "slack",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification to Slack",
+        "channelURL": "{URL to you Slack Webhook}",
+        "username": "{Posting  UserName}",
+        "emojiIcon": "",
+        "channel": "",
+        "x": 750,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "45ee7a6d8095a942",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Plaso Generation Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Plaso file generation failed for  \" + msg.filename;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "6cdf3d577af9b0a0",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Plaso Generation Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Plaso file generation successful for  \" + msg.filename;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 300,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "7052c7cf3cf25128",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Timesketch Ingestion Success",
+        "links": [
+            "23efdbf0c875e9b4"
+        ],
+        "x": 255,
+        "y": 360,
+        "wires": [
+            [
+                "e50e208510ff39b0"
+            ]
+        ]
+    },
+    {
+        "id": "e50e208510ff39b0",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Timesketch Ingestion Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Ingestion of \" + msg.plasofname +\".plaso\" + \" to Timesketch was successful\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 360,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "16fa12099999cc88",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Timesketch Ingestion Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Ingestion of \" + msg.plasofname +\".plaso\" + \" to Timesketch has failed\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "f9b82b65a5326b3c",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Timesketch Ingestion Failure",
+        "links": [
+            "ece35af458a6d609"
+        ],
+        "x": 255,
+        "y": 420,
+        "wires": [
+            [
+                "16fa12099999cc88"
+            ]
+        ]
+    },
+    {
+        "id": "954a99732b5f5b6e",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Queue Release",
+        "links": [
+            "6605cf4eb0370499"
+        ],
+        "x": 255,
+        "y": 60,
+        "wires": [
+            [
+                "3a6411517fef5b73"
+            ]
+        ]
+    },
+    {
+        "id": "3a6411517fef5b73",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Queue Release",
+        "func": "\nmsg.payload = new Date().toISOString() + \" - \" + msg.filename + \" file was released from the queue for processing\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 60,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "6c22648338d35c5a",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Folder Deletion Success",
+        "links": [
+            "93fb06660e035172"
+        ],
+        "x": 255,
+        "y": 480,
+        "wires": [
+            [
+                "7517291f6fe2d322"
+            ]
+        ]
+    },
+    {
+        "id": "fee6a9fad207729c",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Folder Deletion Failure",
+        "links": [
+            "edb1d95b882ceb09"
+        ],
+        "x": 255,
+        "y": 540,
+        "wires": [
+            [
+                "b5df75bca04a95f9"
+            ]
+        ]
+    },
+    {
+        "id": "7517291f6fe2d322",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Folder Deletion Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Ingestion of \" + msg.dirname + \" folder was successfully deleted\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 480,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "b5df75bca04a95f9",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Folder Deletion Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Ingestion of \" + msg.dirname + \" folder deletion failed\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 540,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "a84685eb9077a89b",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Hayabusa Process Success",
+        "links": [
+            "f22865491073bd80"
+        ],
+        "x": 255,
+        "y": 600,
+        "wires": [
+            [
+                "26e7cb16e2d22d21"
+            ]
+        ]
+    },
+    {
+        "id": "58a96201a60bb8f7",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Hayabusa Process Failure",
+        "links": [
+            "a401a10d39c4ee58"
+        ],
+        "x": 255,
+        "y": 660,
+        "wires": [
+            [
+                "643a94ec8f9df1a8"
+            ]
+        ]
+    },
+    {
+        "id": "26e7cb16e2d22d21",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Hayabusa Process Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Hayabusa processing of \" + msg.winevt + \" was successful\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 600,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "643a94ec8f9df1a8",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Hayabusa Process Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Hayabusa processing of \" + msg.winevt + \" has failed\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 660,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "0f7d8fd583347351",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Hayabusa Timesketch Ingestion Success",
+        "links": [
+            "326fb090a1da2129"
+        ],
+        "x": 255,
+        "y": 720,
+        "wires": [
+            [
+                "97ea70065d7c5a32"
+            ]
+        ]
+    },
+    {
+        "id": "be97ece24aa53ecf",
+        "type": "link in",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Notification-IN-Hayabusa Timesketch Ingestion Failure",
+        "links": [
+            "d396c0b276fcf2b7"
+        ],
+        "x": 255,
+        "y": 780,
+        "wires": [
+            [
+                "5a2f59661e1996ac"
+            ]
+        ]
+    },
+    {
+        "id": "97ea70065d7c5a32",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Hayabusa Timesketch Ingestion Success",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Timesketch ingestion of Hayabusa processsed data of  \" + msg.hayabusa_out + \".csv\" +\" was successful\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 720,
+        "wires": [
+            [
+                "aca22b06e47e565c"
+            ]
+        ]
+    },
+    {
+        "id": "5a2f59661e1996ac",
+        "type": "function",
+        "z": "bdf6dc5bd7068a5c",
+        "name": "Hayabusa Timesketch Ingestion Failure",
+        "func": "msg.payload = new Date().toISOString()  + \" - \" + \"Timesketch ingestion of Hayabusa processsed data of  \" + msg.hayabusa_out + \".csv\" + \" has failed\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 780,
+        "wires": [
+            [
+                "aca22b06e47e565c"
             ]
         ]
     }
