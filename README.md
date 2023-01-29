@@ -71,7 +71,7 @@ For more information about setting up incoming webhooks in Slack can be [found h
 - node-red-contrib-fs-ops
 - node-red-contrib-simple-queue
 - node-red-contrib-watchdirectory
-- node-red-contrib-slack
+- node-red-contrib-slack-files
 7. You should have the following folders pre-created on the host where this workflow is being operated.
 - /cases/plaso
 - /cases/processor
