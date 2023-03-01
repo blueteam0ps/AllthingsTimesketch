@@ -11,7 +11,7 @@ This repository contains
 - [Timesketch](https://github.com/google/timesketch/)
 - [Log2timeline/Plaso](https://github.com/log2timeline/plaso)
 - [Node-RED](https://github.com/node-red/node-red)
-- [Hayabusa](https://github.com/Yamato-Security/hayabusahttps://github.com/Yamato-Security/hayabusa)
+- [Hayabusa](https://github.com/Yamato-Security/hayabusa)
 
 # Basic Information
 This section provides a brief overview of the automation setup and how components are configured.
