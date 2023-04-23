@@ -74,7 +74,7 @@ For more information about setting up incoming webhooks in Slack can be [found h
 - node-red-contrib-slack-files
 7. You should have the following folders pre-created on the host where this workflow is being operated.
 - /cases/plaso
-- /cases/processor
+- /cases/processor/host-triage/
 - /cases/evtxproc/
 The account you are running Node-RED must have read and write permissions on /cases and its sub-folders.
 8. You should have Timesketch and Log2timeline pre-installed on the same host as your Node-RED installation.
