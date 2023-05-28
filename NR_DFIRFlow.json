@@ -43,7 +43,7 @@
         "type": "function",
         "z": "545e293e.4e6458",
         "name": "Set-Log2timeline CLI params",
-        "func": "var plasodir = \"/cases/plaso/\";\nvar plasoname = msg.dirname.replace('processor/host-triage/', 'plaso/');\nmsg.l2tcli = \"/:/data log2timeline/plaso log2timeline.py --status_view none --parsers \\\"filestat,winreg,esedb,binary_cookies,chrome_cache,chrome_preferences,custom_destinations,czip,firefox_cache,firefox_cache2,java_idx,jsonl,lnk,mcafee_protection,msiecf,olecf,opera_global,opera_typed_history,pe,prefetch,recycle_bin,recycle_bin_info2,sqlite,symantec_scanlog,text,trendmicro_url,trendmicro_vd,windefender_history,winevt,winevtx,winjob\\\" --storage-file\" + \" \"+ \"/data\" + plasoname + \".plaso\" + \" \" + \"/data\" +msg.unzipdir;\nreturn msg;\n",
+        "func": "var plasodir = \"/cases/plaso/\";\nvar plasoname = msg.dirname.replace('processor', 'plaso');\nmsg.l2tcli = \"/:/data log2timeline/plaso log2timeline.py --status_view none --parsers \\\"filestat,winreg,esedb,binary_cookies,chrome_cache,chrome_preferences,custom_destinations,czip,firefox_cache,firefox_cache2,java_idx,jsonl,lnk,mcafee_protection,msiecf,olecf,opera_global,opera_typed_history,pe,prefetch,recycle_bin,recycle_bin_info2,sqlite,symantec_scanlog,text,trendmicro_url,trendmicro_vd,windefender_history,winevt,winevtx,winjob\\\" --storage-file\" + \" \"+ \"/data\" + plasoname + \".plaso\" + \" \" + \"/data\" +msg.unzipdir;\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -652,7 +652,7 @@
         "type": "function",
         "z": "545e293e.4e6458",
         "name": "Hayabusa Process Variables",
-        "func": "//Create a variable to store the EVTX directory path\nmsg.winevt = msg.dirname + '/C/Windows/System32/winevt/';\nmsg.hayabusa_job = msg.plasofname + '-hayabusa';\nmsg.hayabusa_out = '/cases/evtxproc/' + msg.hayabusa_job;\nmsg.hayabusa_exec =  ' csv-timeline -d ' +msg.winevt+ ' --RFC-3339 -o' + msg.hayabusa_out + '.csv' + ' -p timesketch-verbose -U'\nmsg.hayabusa_ts = \"-u username -p username --host http://127.0.0.1 --timeline_name \" + msg.hayabusa_job + \" --sketch_id \" + \"1 \" + msg.hayabusa_out + '.csv';\nreturn msg;",
+        "func": "//Create a variable to store the EVTX directory path\nmsg.winevt = msg.dirname + '/C/Windows/System32/winevt/';\nmsg.hayabusa_job = msg.plasofname + '-hayabusa';\nmsg.hayabusa_out = '/cases/evtxproc/' + msg.hayabusa_job;\nmsg.hayabusa_exec =  ' csv-timeline -d ' +msg.winevt+ ' --RFC-3339 -o' + msg.hayabusa_out + '.csv' + ' -p timesketch-verbose -U'\nmsg.hayabusa_ts = \"-u user -p pass --host http://127.0.0.1 --timeline_name \" + msg.hayabusa_job + \" --sketch_id \" + \"1 \" + msg.hayabusa_out + '.csv';\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -675,8 +675,8 @@
         "links": [
             "b3292729f0f4e2a6"
         ],
-        "x": 355,
-        "y": 360,
+        "x": 345,
+        "y": 320,
         "wires": []
     },
     {
@@ -687,8 +687,8 @@
         "links": [
             "b9a267874af84c06"
         ],
-        "x": 35,
-        "y": 520,
+        "x": 85,
+        "y": 580,
         "wires": [
             [
                 "3fca2583.81cb3a"
@@ -703,8 +703,8 @@
         "links": [
             "0a3667ee506b3355"
         ],
-        "x": 415,
-        "y": 360,
+        "x": 515,
+        "y": 300,
         "wires": [
             [
                 "883d9df4.78533",
@@ -779,7 +779,7 @@
         "id": "56455a586c5705d5",
         "type": "exec",
         "z": "e852995364e3dc8d",
-        "command": "/opt/hayabusa/hayabusa-2.4.0-lin-musl",
+        "command": "/opt/hayabusa/hayabusa-2.5.1-lin-musl",
         "addpay": "hayabusa_exec",
         "append": "",
         "useSpawn": "false",
@@ -936,8 +936,8 @@
         "links": [
             "1577fd627ecd3fb7"
         ],
-        "x": 1255,
-        "y": 200,
+        "x": 1275,
+        "y": 260,
         "wires": []
     },
     {
@@ -986,7 +986,7 @@
             "be97ece24aa53ecf"
         ],
         "x": 1275,
-        "y": 420,
+        "y": 200,
         "wires": []
     },
     {
@@ -998,8 +998,8 @@
         "links": [
             "0f7d8fd583347351"
         ],
-        "x": 1275,
-        "y": 380,
+        "x": 1255,
+        "y": 100,
         "wires": []
     },
     {
@@ -1008,8 +1008,8 @@
         "z": "e852995364e3dc8d",
         "name": "Slack notification nodes",
         "info": "",
-        "x": 1240,
-        "y": 320,
+        "x": 1280,
+        "y": 60,
         "wires": []
     },
     {
